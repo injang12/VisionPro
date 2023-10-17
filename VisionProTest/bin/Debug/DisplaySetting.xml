@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DisplaySetting</name>
+    </assembly>
+    <members>
+        <member name="T:DisplaySetting.DisplayManager">
+            <summary>
+            디스플레이 관리 클래스
+            </summary>
+        </member>
+        <member name="M:DisplaySetting.DisplayManager.InitDisplay(System.Windows.Forms.FlowLayoutPanel,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            디스플레이를 지정한 값 만큼 패널에 만들어준다
+            </summary>
+            <param name="panel">디스플레이를 넣을 패널</param>
+            <param name="screenW">디스플레이 가로 정렬(panel.Width / screenLayout_W - 5)</param>
+            <param name="ScreenH">디스플레이 세로 정렬(panel.Height / screenLayout_H)</param>
+            <param name="index">반복문을 통한 인덱스</param>
+            <param name="i">반복문을 통한 i값</param>
+            <param name="j">반복문을 통한 j값</param>
+            <returns></returns>
+        </member>
+        <member name="M:DisplaySetting.DisplayManager.InitLabel(System.Windows.Forms.FlowLayoutPanel,Cognex.VisionPro.CogRecordDisplay[],System.Int32,System.Int32)">
+            <summary>
+            라벨을 지정한 값 만큼 패널에 만들어준다
+            </summary>
+            <param name="panel">라벨을 넣을 패널</param>
+            <param name="display">라벨을 생성할 디스플레이</param>
+            <param name="screenW">라벨 가로 정렬(디스플레이와 동일 하게)</param>
+            <param name="index">반복문을 통한 인덱스</param>
+            <returns></returns>
+        </member>
+        <member name="M:DisplaySetting.DisplayManager.ClickEvent(System.Object,System.Windows.Forms.Label[],System.Int32,System.Int32)">
+            <summary>
+            디스플레이 클릭 이벤트 메서드
+            </summary>
+            <param name="sender">CogRecordDisplay형식 디스플레이</param>
+            <param name="label">선택된 디스플레이의 라벨</param>
+            <param name="step">선택된 디스플레이의 스탭</param>
+            <param name="nScreen">화면 총 갯수</param>
+            <returns></returns>
+        </member>
+        <member name="M:DisplaySetting.DisplayManager.DoubleClickEvent(Cognex.VisionPro.CogRecordDisplay[],System.Windows.Forms.Label[],System.Windows.Forms.FlowLayoutPanel,System.Int32,System.Boolean)">
+            <summary>
+            디스플레이 더블클릭 이벤트 메서드
+            </summary>
+            <param name="display">선택된 디스플레이</param>
+            <param name="label">선택된 디스플레이의 라벨</param>
+            <param name="panel">패널 범위 만큼 디스플레이 확대</param>
+            <param name="step">선택한 디스플레이의 스탭</param>
+            <param name="scale">현재 디스플레이 확대 유무</param>
+        </member>
+    </members>
+</doc>

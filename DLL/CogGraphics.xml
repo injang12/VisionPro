@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CogGraphics</name>
+    </assembly>
+    <members>
+        <member name="T:CogGraphics.GraphicManager">
+            <summary>
+            그래픽 출력 클래스
+            </summary>
+        </member>
+        <member name="M:CogGraphics.GraphicManager.PMAlign_Result_Graphic(Cognex.VisionPro.CogRecordDisplay,Cognex.VisionPro.PMAlign.CogPMAlignTool)">
+            <summary>
+            PMAlign 결과 그래픽 출력
+            </summary>
+            <param name="display">그래픽 출력 할 디스플레이</param>
+            <param name="pmAlign">결과값 가지고 있는 PMAlignTool</param>
+        </member>
+        <member name="M:CogGraphics.GraphicManager.OCRMax_Result_Graphic(Cognex.VisionPro.CogRecordDisplay,Cognex.VisionPro.OCRMax.CogOCRMaxTool)">
+            <summary>
+            OCRMax 결과 그래픽 출력
+            </summary>
+            <param name="display">그래픽 출력 할 디스플레이</param>
+            <param name="ocrMax">결과값 가지고 있는 OCRMaxTool</param>
+        </member>
+        <member name="M:CogGraphics.GraphicManager.PMAlign_Search_Graphic(Cognex.VisionPro.CogRecordDisplay,Cognex.VisionPro.PMAlign.CogPMAlignTool)">
+            <summary>
+            PMAlign Search영역 그래픽 출력
+            </summary>
+            <param name="display">그래픽 출력 할 디스플레이</param>
+            <param name="pmAlign">결과값 가지고 있는 PMAlignTool</param>
+        </member>
+        <member name="M:CogGraphics.GraphicManager.OCRMax_Search_Graphic(Cognex.VisionPro.CogRecordDisplay,Cognex.VisionPro.OCRMax.CogOCRMaxTool)">
+            <summary>
+            OCRMax Search영역 그래픽 출력
+            </summary>
+            <param name="display">그래픽 출력 할 디스플레이</param>
+            <param name="ocrMax">결과값 가지고 있는 OCRMaxTool</param>
+        </member>
+    </members>
+</doc>

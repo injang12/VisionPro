@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ImageFileManager</name>
+    </assembly>
+    <members>
+        <member name="T:ImageFileManager.ImageManager">
+            <summary>
+            이미지 파일 관리 클래스
+            </summary>
+        </member>
+        <member name="M:ImageFileManager.ImageManager.TempImageSave(Cognex.VisionPro.ICogImage)">
+            <summary>
+            이미지 임시 저장
+            </summary>
+            <param name="image">저장 할 이미지</param>
+        </member>
+        <member name="M:ImageFileManager.ImageManager.TempImageLoad">
+            <summary>
+            임시 저장 한 이미지 로드 및 삭제
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ImageFileManager.ImageManager.SaveImage(Cognex.VisionPro.CogRecordDisplay)">
+            <summary>
+            디스플레이 이미지 저장
+            </summary>
+            <param name="display">이미지 저장 할 디스플레이</param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageFileManager.ImageManager.LoadImage(Cognex.VisionPro.CogRecordDisplay)">
+            <summary>
+            디스플레이 이미지 로드
+            </summary>
+            <param name="display">이미지 로드 할 디스플레이</param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageFileManager.ImageManager.HardwareImageSave(System.String,System.String,Cognex.VisionPro.ICogImage)">
+            <summary>
+            카메라 하드웨어 트리거 모드 자동 이미지 저장
+            </summary>
+            <param name="fileName">이미지 파일 이름</param>
+            <param name="fileFormat">이미지 확장자 형식</param>
+            <param name="image">촬영 한 이미지</param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageFileManager.ImageManager.Save_ImageFile(System.String,Cognex.VisionPro.ICogImage)">
+            <summary>
+            이미지 저장(경로)
+            </summary>
+            <param name="path">경로 지정</param>
+            <param name="image">저장 할 이미지</param>
+            <returns></returns>
+        </member>
+        <member name="M:ImageFileManager.ImageManager.Load_ImageFile(System.String)">
+            <summary>
+            이미지 불러오기(경로)
+            </summary>
+            <param name="pstr_Path">경로 지정</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

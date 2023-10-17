@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CameraManager</name>
+    </assembly>
+    <members>
+        <member name="T:Cameras.CameraManager">
+            <summary>
+            카메라 관리 클래스
+            </summary>
+        </member>
+        <member name="M:Cameras.CameraManager.SetCamera(System.Windows.Forms.ComboBox,System.EventHandler)">
+            <summary>
+            프레임 그래버 취득 메서드
+            </summary>
+            <param name="CameraType">프레임 그래버 추가 할 콤보 박스</param>
+            <param name="CameraTypeChanged">콤보 박스 이벤트 추가</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cameras.CameraManager.SetFormat(Cognex.VisionPro.ICogFrameGrabber,System.Windows.Forms.ComboBox,System.EventHandler)">
+            <summary>
+            카메라 포맷 취득 메서드
+            </summary>
+            <param name="mFrameGrabber">선택한 프레임 그래버</param>
+            <param name="VideoFormat">비디오 포맷 방식 추가 할 콤보 박스</param>
+            <param name="VideoFormatChanged">콤보 박스 이벤트 추가</param>
+        </member>
+        <member name="M:Cameras.CameraManager.SetFifo(Cognex.VisionPro.ICogFrameGrabber,System.Windows.Forms.ComboBox)">
+            <summary>
+            FifoTool 생성 메서드
+            </summary>
+            <param name="mFrameGrabber">선택한 프레임 그래버</param>
+            <param name="VideoFormat">선택한 비디오 포맷</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cameras.CameraManager.Live_ToolRun(Cognex.VisionPro.CogRecordDisplay,System.Double,System.Double,System.Double)">
+            <summary>
+            카메라 영상 촬영 시작 메서드
+            </summary>
+            <param name="display">영상 출력할 디스플레이</param>
+            <param name="exp">노출 값</param>
+            <param name="bright">밝기 값</param>
+            <param name="contrast">대비 값</param>
+        </member>
+        <member name="M:Cameras.CameraManager.AcquireStart(Cognex.VisionPro.CogRecordDisplay,System.Double,System.Double,System.Double)">
+            <summary>
+            카메라 1회 촬영 메서드
+            </summary>
+            <param name="display">영상 출력할 디스플레이</param>
+            <param name="exp">노출 값</param>
+            <param name="bright">밝기 값</param>
+            <param name="contrast">대비 값</param>
+        </member>
+        <member name="M:Cameras.CameraManager.HardWareTriggerStart(System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            카메라 하드웨어 트리거 모드 시작 메서드
+            </summary>
+            <param name="exp">노출 값</param>
+            <param name="bright">밝기 값</param>
+            <param name="contrast">대비 값</param>
+            <param name="chkEnbStrobe">스트로브 모드 추가</param>
+        </member>
+        <member name="M:Cameras.CameraManager.HardWareTriggerStop">
+            <summary>
+            카메라 하드웨어 트리거 모드 종료 메서드
+            </summary>
+        </member>
+        <member name="M:Cameras.CameraManager.HardWare_AcqFifo(Cognex.VisionPro.CogRecordDisplay)">
+            <summary>
+            카메라 하드웨어 트리거 모드 촬영 메서드
+            </summary>
+            <param name="_mDisplay">이미지 출력 할 디스플레이</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

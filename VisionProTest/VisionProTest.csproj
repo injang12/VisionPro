@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5E8007BA-CE5B-4A6F-9FF4-BC45A7A89B82}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>VisionProTest</RootNamespace>
+    <AssemblyName>VisionProTest</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>게시\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>FAPLUS.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CameraManager">
+      <HintPath>..\DLL\CameraManager.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Caliper, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Caliper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Controls, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Core, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Display.Controls, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Display.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.PixelMap, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.PixelMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.PMAlign, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.PMAlign.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.PMAlign.Controls, Version=75.1.1.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.PMAlign.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DisplaySetting">
+      <HintPath>..\DLL\DisplaySetting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ImageFileManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\ImageFileManager.dll</HintPath>
+    </Reference>
+    <Reference Include="INIFileManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\INIFileManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.ActUtlType64Lib">
+      <HintPath>..\..\..\Interop.ActUtlType64Lib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SplashThread">
+      <HintPath>..\DLL\SplashThread.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CogToolForm\FormToolCaliper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CogToolForm\FormToolCaliper.Designer.cs">
+      <DependentUpon>FormToolCaliper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\FormImageMasking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\FormImageMasking.Designer.cs">
+      <DependentUpon>FormImageMasking.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CogToolForm\FormToolPattern.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CogToolForm\FormToolPattern.Designer.cs">
+      <DependentUpon>FormToolPattern.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\FormDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\FormDisplay.Designer.cs">
+      <DependentUpon>FormDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Class\UcDefine.cs" />
+    <Compile Include="Form\FormSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\FormSetup.Designer.cs">
+      <DependentUpon>FormSetup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class\ToolSaveManager.cs" />
+    <Compile Include="Class\ToolLoadManager.cs" />
+    <EmbeddedResource Include="CogToolForm\FormToolCaliper.resx">
+      <DependentUpon>FormToolCaliper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\FormImageMasking.resx">
+      <DependentUpon>FormImageMasking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CogToolForm\FormToolPattern.resx">
+      <DependentUpon>FormToolPattern.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\FormDisplay.resx">
+      <DependentUpon>FormDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Form\FormSetup.resx">
+      <DependentUpon>FormSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FAPLUS.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2%28x86 및 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

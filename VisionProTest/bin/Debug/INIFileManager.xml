@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>INIFileManager</name>
+    </assembly>
+    <members>
+        <member name="T:INIFileManager.INIFiles">
+            <summary>
+            INI파일 관리 클래스
+            </summary>
+        </member>
+        <member name="M:INIFileManager.INIFiles.Set_INI_Path(System.String)">
+            <summary>
+            INI파일 경로 지정
+            </summary>
+            <param name="INIPath">불러올 INI파일 경로 입력</param>
+        </member>
+        <member name="M:INIFileManager.INIFiles.ReadValue(System.String,System.String)">
+            <summary>
+            INI파일 내용 읽어온 후 해당 값 String으로 반환
+            </summary>
+            <param name="Section">INI파일의 섹션 이름</param>
+            <param name="Key">해당 섹션의 내용 이름</param>
+            <returns></returns>
+        </member>
+        <member name="M:INIFileManager.INIFiles.WriteValue(System.String,System.String,System.String)">
+            <summary>
+            INI파일 내용 입력한 값으로 수정
+            </summary>
+            <param name="Section">INI파일의 섹션 이름</param>
+            <param name="Key">해당 섹션의 내용 이름</param>
+            <param name="Value">해당 섹션의 내용 값</param>
+            <returns></returns>
+        </member>
+        <member name="M:INIFileManager.INIFiles.GetParam(System.String,System.String,System.String)">
+            <summary>
+            INI파일 내용 비어있는지 확인 후 비어있으면 해당값을 기본값으로 적용
+            </summary>
+            <param name="section">INI파일의 섹션 이름</param>
+            <param name="key">해당 섹션의 내용 이름</param>
+            <param name="defaultValue">내용이 비어있을 때 사용 할 기본값</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
