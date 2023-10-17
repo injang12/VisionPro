@@ -24,7 +24,7 @@ namespace VisionProTest
         private ImageManager Image_Manager { get; } = new ImageManager();
 
         public static string ModelName { get; set; }
-        private string ModelListPath { get; } = Application.StartupPath + "\\CONFIG\\ModelList\\";
+        private string ModelListPath { get; set; } = Application.StartupPath + $"\\CONFIG\\ModelList\\{ModelName}\\";
 
         public FormToolPattern()
         {
@@ -34,24 +34,22 @@ namespace VisionProTest
 
         public void PatternRegist(int _index)
         {
-            if (File.Exists(ModelListPath + ModelName + "\\PMAlign.ini"))
+            if (File.Exists(ModelListPath + "\\PMAlign.ini"))
                 LoadParam(_index);
 
-            if (File.Exists(ModelListPath + ModelName + "\\MasterImage.bmp"))
+            if (File.Exists(ModelListPath + "\\MasterImage.bmp"))
             {
                 PMAlignTool.Pattern.TrainImageMask = Load_MaskImage(ModelToolName.Text);
-                Train_Pattern(true, Image_Manager.Load_ImageFile(ModelListPath + ModelName + "\\MasterImage.bmp"), TrainDisplay);
+                Train_Pattern(true, Image_Manager.Load_ImageFile(ModelListPath + "\\MasterImage.bmp"), TrainDisplay);
             }
         }
 
         public void LoadParam(int _index)
         {
-            ToolLoadManager _ToolLoadManager = new ToolLoadManager();
-
-            _ToolLoadManager.SetINIPath(UcDefine.PMAlign);
-            SearchRegion_Rect = _ToolLoadManager.GetSearchRegion(_index);
-
+            ToolLoadManager.SetINIPath(UcDefine.PMAlign);
+            ToolLoadManager.GetSearchRegion(UcDefine.PMAlign, _index);
             ToolLoadManager.GetTrainRegion(_index);
+
             txtThreshold.Text = ToolLoadManager.GetThreshold(_index);
             txtAngleLow.Text = ToolLoadManager.GetAngleLow(_index);
             txtAngleHigh.Text = ToolLoadManager.GetAngleHigh(_index);
@@ -117,7 +115,7 @@ namespace VisionProTest
             {
                 if (!fileLoad)
                 {
-                    Image_Manager.Save_ImageFile(ModelListPath + ModelName + "\\MasterImage.bmp", image);
+                    Image_Manager.Save_ImageFile(ModelListPath + "\\MasterImage.bmp", image);
                 }
 
                 if (display != null && PMAlignTool.Pattern.Trained)
@@ -139,10 +137,10 @@ namespace VisionProTest
 
         private CogImage8Grey Load_MaskImage(string _name)
         {
-            if (!File.Exists(ModelListPath + ModelName + $"\\Mask_{_name}.bmp"))
+            if (!File.Exists(ModelListPath + $"\\Mask_{_name}.bmp"))
                 return null;
 
-            CogImage8Grey MaskImage = (CogImage8Grey)Image_Manager.Load_ImageFile(ModelListPath + ModelName + $"\\Mask_{_name}.bmp");
+            CogImage8Grey MaskImage = (CogImage8Grey)Image_Manager.Load_ImageFile(ModelListPath + $"\\Mask_{_name}.bmp");
 
             return MaskImage;
         }
@@ -192,7 +190,7 @@ namespace VisionProTest
             if (_FormImageMasking.SelectedMasking())
             {
                 PMAlignTool.Pattern.TrainImageMask = _FormImageMasking.cogImageMaskingEditV2.MaskImage;
-                Image_Manager.Save_ImageFile(ModelListPath + ModelName + $"\\Mask_{ModelToolName.Text}.bmp", _FormImageMasking.cogImageMaskingEditV2.MaskImage);
+                Image_Manager.Save_ImageFile(ModelListPath + $"\\Mask_{ModelToolName.Text}.bmp", _FormImageMasking.cogImageMaskingEditV2.MaskImage);
             }
         }
 
@@ -211,10 +209,10 @@ namespace VisionProTest
         {
             if (MessageBox.Show("패턴을 삭제 하시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                File.Delete(ModelListPath + ModelName + "\\MasterImage.bmp");
+                File.Delete(ModelListPath + "\\MasterImage.bmp");
 
-                if (File.Exists(ModelListPath + ModelName + "\\Mask.bmp"))
-                    File.Delete(ModelListPath + ModelName + "\\Mask.bmp");
+                if (File.Exists(ModelListPath + "\\Mask.bmp"))
+                    File.Delete(ModelListPath + "\\Mask.bmp");
 
                 PMAlignTool.Pattern.Untrain();
                 TrainDisplay.Image = null;
@@ -275,7 +273,7 @@ namespace VisionProTest
             ToolSaveManager.Approx = txtApprox.Text;
             ToolSaveManager.IsHighSensitivity = Convert.ToString(chkHighSensitivity.Checked);
             ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.PMAlign);
-            ToolSaveManager.ToolParamSave(ModelListPath + ModelName + "\\", "PMAlign", ModelToolName.Text);
+            ToolSaveManager.ToolParamSave(ModelListPath + "\\", "PMAlign", ModelToolName.Text);
         }
 
         public bool StartRun(ICogImage cogImage, CogDisplay display)

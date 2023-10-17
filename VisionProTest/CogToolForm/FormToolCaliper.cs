@@ -8,133 +8,69 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Reflection;
 
 namespace VisionProTest
 {
     public partial class FormToolCaliper : Form
     {
-        private CogRectangleAffine SearchRegion_Rect = new CogRectangleAffine();
-        private static CogRecordDisplay mDisplay = new CogRecordDisplay();
+        public static CogRectangleAffine SearchRegion_Rect { get; set; } = new CogRectangleAffine();
+        public static CogRecordDisplay CogDisplay { get; set; } = new CogRecordDisplay();
 
-        private static string modelName;
-        private readonly string modelListPath = Application.StartupPath + $"\\CONFIG\\ModelList\\{modelName}\\";
+        public static string ModelName { get; set; }
+        private string ModelListPath { get; set; } = Application.StartupPath + $"\\CONFIG\\ModelList\\{ModelName}\\";
+
+        private static bool DoubleEdge;
+        private static int Polarity, Polarity2;
+        private static string Threshold, FilterSize, EdgePairWidth, ToolName;
 
         public FormToolCaliper()
         {
             InitializeComponent();
         }
 
-        public void SetStrName(string strname)
-        {
-            modelName = strname;
-        }
-
-        public void SetDisplay(CogRecordDisplay _display)
-        {
-            mDisplay = _display;
-        }
-
         public void CaliperRegist(int _index)
         {
-            if (File.Exists(modelListPath + "Caliper.ini"))
-                LoadParam(_index);
+            if (File.Exists(ModelListPath + "Caliper.ini"))
+            {
+                SetCaliperParam(_index);
+                LoadParam();
+            }
         }
 
-        private void BtnSearchRegion_Click(object sender, EventArgs e)
+        public static void SetCaliperParam(int _index)
         {
-            SearchRegion_Rect.GraphicDOFEnable = CogRectangleAffineDOFConstants.All;
-            SearchRegion_Rect.Interactive = true;
-            SearchRegion_Rect.XDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.SolidArrow;
-            SearchRegion_Rect.YDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.Arrow;
-            SearchRegion_Rect.SelectedSpaceName = "#";
-            SearchRegion_Rect.SelectedColor = CogColorConstants.Blue;
+            ToolLoadManager.SetINIPath(UcDefine.Caliper);
+            ToolLoadManager.GetSearchRegion(UcDefine.Caliper, _index);
 
-            mDisplay.StaticGraphics.Clear();
-            mDisplay.InteractiveGraphics.Clear();
+            DoubleEdge = ToolLoadManager.GetMode(_index);
+            Polarity = ToolLoadManager.GetEdge1Polarity(_index);
 
-            if (!File.Exists(modelListPath + "Caliper.ini"))
-            {
-                SearchRegion_Rect.CenterX = 500;
-                SearchRegion_Rect.CenterY = 500;
-                SearchRegion_Rect.SideXLength = 200;
-                SearchRegion_Rect.SideYLength = 200;
-                SearchRegion_Rect.Rotation = 0;
-            }
+            if (DoubleEdge)
+                Polarity2 = ToolLoadManager.GetEdge2Polarity(_index);
 
-            mDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
+            Threshold = ToolLoadManager.GetThreshold(_index);
+            FilterSize = ToolLoadManager.GetFilterSize(_index);
+
+            if (DoubleEdge)
+                EdgePairWidth = ToolLoadManager.GetEdgePairWidth(_index);
+            ToolName = ToolLoadManager.GetModelToolName(_index);
         }
 
-        private void BtnFind_Click(object sender, EventArgs e)
+        private void LoadParam()
         {
-            if (!double.TryParse(txtThreshold.Text, out double threshold))
-            {
-                MessageBox.Show("Threshold 입력이 잘못 되었습니다.");
-                return;
-            }
-
-            if (!int.TryParse(txtThreshold.Text, out int filterSize))
-            {
-                MessageBox.Show("Filter Size 입력이 잘못 되었습니다.");
-                return;
-            }
-
-            mDisplay.StaticGraphics.Clear();
-            mDisplay.InteractiveGraphics.Clear();
-
-            if (threshold > 10000)
-                txtThreshold.Text = "10000";
-            else if (threshold < 0)
-                txtThreshold.Text = "0";
-
-            if (filterSize <= 0)
-                txtFilterSize.Text = "1";
-            else if (filterSize > 99999)
-                txtFilterSize.Text = "99999";
-
-            StartRun(mDisplay.Image, mDisplay);
+            DoubleEdged.Checked = DoubleEdge;
+            comboPolarity.SelectedIndex = Polarity;
+            comboPolarity2.SelectedIndex = Polarity2;
+            txtThreshold.Text = Threshold;
+            txtFilterSize.Text = FilterSize;
+            txtEdgePairWidth.Text = EdgePairWidth;
+            ModelToolName.Text = ToolName;
         }
 
-        private void BtnSave_Click(object sender, EventArgs e)
+        public static bool StartRun(ICogImage cogImage, CogDisplay display)
         {
-            if (string.IsNullOrEmpty(ModelToolName.Text))
-            {
-                MessageBox.Show("이름을 입력 해주세요.", "확인");
-                return;
-            }
-
-            if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                return;
-
-            string strMode = null;
-            ImageManager _ImageManager = new ImageManager();
-
-            _ImageManager.Save_ImageFile(modelListPath + "MasterImage.bmp", mDisplay.Image);
-
-            switch (DoubleEdged.Checked)
-            {
-                case true:
-                    strMode = "Double";
-                    ToolSaveManager.Polarity2 = comboPolarity2.Text;
-                    ToolSaveManager.EdgePairWidth = txtEdgePairWidth.Text;
-                    break;
-                case false:
-                    strMode = "Single";
-                    ToolSaveManager.Polarity2 = "";
-                    ToolSaveManager.EdgePairWidth = "10";
-                    break;
-            }
-
-            ToolSaveManager.SearchRegion_Rect = SearchRegion_Rect;
-            ToolSaveManager.Polarity = comboPolarity.Text;
-            ToolSaveManager.Threshold = txtThreshold.Text;
-            ToolSaveManager.FilterSize = txtFilterSize.Text;
-            ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.Caliper, strMode);
-            ToolSaveManager.ToolParamSave(modelListPath, "Caliper", ModelToolName.Text);
-        }
-
-        public bool StartRun(ICogImage cogImage, CogDisplay display)
-        {
-            int index = comboPolarity.SelectedIndex;
+            int index = Polarity;
             index++;
 
             CogCaliperTool CaliperTool = new CogCaliperTool
@@ -148,20 +84,20 @@ namespace VisionProTest
             CaliperTool.RunParams.SingleEdgeScorers.Clear();
             CaliperTool.RunParams.SingleEdgeScorers.Add(ScorerConstrast);
 
-            CaliperTool.RunParams.ContrastThreshold = Convert.ToDouble(txtThreshold.Text);
-            CaliperTool.RunParams.FilterHalfSizeInPixels = Convert.ToInt32(txtFilterSize.Text);
+            CaliperTool.RunParams.ContrastThreshold = Convert.ToDouble(Threshold);
+            CaliperTool.RunParams.FilterHalfSizeInPixels = Convert.ToInt32(FilterSize);
             CaliperTool.RunParams.Edge0Polarity = (CogCaliperPolarityConstants)index;
 
-            switch (DoubleEdged.Checked)
+            switch (DoubleEdge)
             {
                 case true:
-                    int index2 = comboPolarity2.SelectedIndex;
+                    int index2 = Polarity2;
                     index2++;
 
                     CaliperTool.RunParams.EdgeMode = CogCaliperEdgeModeConstants.Pair;
                     CaliperTool.RunParams.Edge1Polarity = (CogCaliperPolarityConstants)index2;
-                    CaliperTool.RunParams.Edge0Position = -1 * (Convert.ToDouble(txtEdgePairWidth.Text) / 2);
-                    CaliperTool.RunParams.Edge1Position = Convert.ToDouble(txtEdgePairWidth.Text) / 2;
+                    CaliperTool.RunParams.Edge0Position = -1 * (Convert.ToDouble(EdgePairWidth) / 2);
+                    CaliperTool.RunParams.Edge1Position = Convert.ToDouble(EdgePairWidth) / 2;
                     break;
                 case false:
                     CaliperTool.RunParams.EdgeMode = CogCaliperEdgeModeConstants.SingleEdge;
@@ -214,25 +150,96 @@ namespace VisionProTest
             return true;
         }
 
-        public void LoadParam(int _index)
+        private void BtnSearchRegion_Click(object sender, EventArgs e)
         {
-            ToolLoadManager _ToolLoadManager = new ToolLoadManager();
+            SearchRegion_Rect.GraphicDOFEnable = CogRectangleAffineDOFConstants.All;
+            SearchRegion_Rect.Interactive = true;
+            SearchRegion_Rect.XDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.SolidArrow;
+            SearchRegion_Rect.YDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.Arrow;
+            SearchRegion_Rect.SelectedSpaceName = "#";
+            SearchRegion_Rect.SelectedColor = CogColorConstants.Blue;
 
-            _ToolLoadManager.SetINIPath(UcDefine.Caliper);
+            CogDisplay.StaticGraphics.Clear();
+            CogDisplay.InteractiveGraphics.Clear();
 
-            SearchRegion_Rect = _ToolLoadManager.GetSearchRegion(_index);
-            DoubleEdged.Checked = ToolLoadManager.GetMode(_index);
-            comboPolarity.SelectedIndex = ToolLoadManager.GetEdge1Polarity(_index);
+            if (!File.Exists(ModelListPath + "Caliper.ini"))
+            {
+                SearchRegion_Rect.CenterX = 500;
+                SearchRegion_Rect.CenterY = 500;
+                SearchRegion_Rect.SideXLength = 200;
+                SearchRegion_Rect.SideYLength = 200;
+                SearchRegion_Rect.Rotation = 0;
+            }
 
-            if (DoubleEdged.Checked)
-                comboPolarity2.SelectedIndex = ToolLoadManager.GetEdge2Polarity(_index);
+            CogDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
+        }
 
-            txtThreshold.Text = ToolLoadManager.GetThreshold(_index);
-            txtFilterSize.Text = ToolLoadManager.GetFilterSize(_index);
+        private void BtnFind_Click(object sender, EventArgs e)
+        {
+            if (!double.TryParse(txtThreshold.Text, out double threshold))
+            {
+                MessageBox.Show("Threshold 입력이 잘못 되었습니다.");
+                return;
+            }
 
-            if (DoubleEdged.Checked)
-                txtEdgePairWidth.Text = ToolLoadManager.GetEdgePairWidth(_index);
-            ModelToolName.Text = ToolLoadManager.GetModelToolName(_index);
+            if (!int.TryParse(txtThreshold.Text, out int filterSize))
+            {
+                MessageBox.Show("Filter Size 입력이 잘못 되었습니다.");
+                return;
+            }
+
+            CogDisplay.StaticGraphics.Clear();
+            CogDisplay.InteractiveGraphics.Clear();
+
+            if (threshold > 10000)
+                txtThreshold.Text = "10000";
+            else if (threshold < 0)
+                txtThreshold.Text = "0";
+
+            if (filterSize <= 0)
+                txtFilterSize.Text = "1";
+            else if (filterSize > 99999)
+                txtFilterSize.Text = "99999";
+
+            StartRun(CogDisplay.Image, CogDisplay);
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(ModelToolName.Text))
+            {
+                MessageBox.Show("이름을 입력 해주세요.", "확인");
+                return;
+            }
+
+            if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                return;
+
+            string strMode = null;
+            ImageManager _ImageManager = new ImageManager();
+
+            _ImageManager.Save_ImageFile(ModelListPath + "MasterImage.bmp", CogDisplay.Image);
+
+            switch (DoubleEdged.Checked)
+            {
+                case true:
+                    strMode = "Double";
+                    ToolSaveManager.Polarity2 = comboPolarity2.Text;
+                    ToolSaveManager.EdgePairWidth = txtEdgePairWidth.Text;
+                    break;
+                case false:
+                    strMode = "Single";
+                    ToolSaveManager.Polarity2 = "";
+                    ToolSaveManager.EdgePairWidth = "10";
+                    break;
+            }
+
+            ToolSaveManager.SearchRegion_Rect = SearchRegion_Rect;
+            ToolSaveManager.Polarity = comboPolarity.Text;
+            ToolSaveManager.Threshold = txtThreshold.Text;
+            ToolSaveManager.FilterSize = txtFilterSize.Text;
+            ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.Caliper, strMode);
+            ToolSaveManager.ToolParamSave(ModelListPath, "Caliper", ModelToolName.Text);
         }
 
         private void DoubleEdged_CheckedChanged(object sender, EventArgs e)

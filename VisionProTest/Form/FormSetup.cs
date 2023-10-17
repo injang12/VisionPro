@@ -100,7 +100,6 @@ namespace VisionProTest
                 return;
 
             _FormToolPattern = new FormToolPattern();
-            _FormToolCaliper = new FormToolCaliper();
 
             INIFiles.Set_INI_Path(iniPath);
 
@@ -140,8 +139,8 @@ namespace VisionProTest
                         {
                             if (name == INIFiles.ReadValue($"CALIPER{j + 1}", "Name"))
                             {
-                                _FormToolCaliper.LoadParam(j);
-                                isRun = _FormToolCaliper.StartRun(image, display);
+                                FormToolCaliper.SetCaliperParam(j);
+                                isRun = FormToolCaliper.StartRun(image, display);
                                 break;
                             }
                         }
@@ -294,8 +293,8 @@ namespace VisionProTest
             _FormToolCaliper?.Dispose();
 
             _FormToolCaliper = new FormToolCaliper();
-            _FormToolCaliper.SetStrName(strSelectedName);
-            _FormToolCaliper.SetDisplay(cogDisplaySetup);
+            FormToolCaliper.ModelName = strSelectedName;
+            FormToolCaliper.CogDisplay = cogDisplaySetup;
 
             _FormToolCaliper = new FormToolCaliper
             {
