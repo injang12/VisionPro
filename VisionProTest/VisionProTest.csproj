@@ -111,10 +111,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\INIFileManager.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.ActUtlType64Lib">
-      <HintPath>..\..\..\Interop.ActUtlType64Lib.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="SplashThread">
       <HintPath>..\DLL\SplashThread.dll</HintPath>
       <Private>True</Private>

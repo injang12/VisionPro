@@ -105,9 +105,8 @@ namespace VisionProTest
             if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 return;
 
+            string strMode = null;
             ImageManager _ImageManager = new ImageManager();
-            ToolSaveManager _ToolSaveManager = new ToolSaveManager();
-            string strMode;
 
             _ImageManager.Save_ImageFile(modelListPath + "MasterImage.bmp", mDisplay.Image);
 
@@ -115,27 +114,22 @@ namespace VisionProTest
             {
                 case true:
                     strMode = "Double";
-                    _ToolSaveManager.SetEdge2Polarity(comboPolarity2.Text);
-                    _ToolSaveManager.SetEdgePairWidth(txtEdgePairWidth.Text);
+                    ToolSaveManager.Polarity2 = comboPolarity2.Text;
+                    ToolSaveManager.EdgePairWidth = txtEdgePairWidth.Text;
                     break;
                 case false:
                     strMode = "Single";
-                    _ToolSaveManager.SetEdge2Polarity("");
-                    _ToolSaveManager.SetEdgePairWidth("10");
-                    break;
-                default:
-                    strMode = null;
+                    ToolSaveManager.Polarity2 = "";
+                    ToolSaveManager.EdgePairWidth = "10";
                     break;
             }
 
-            _ToolSaveManager.SetSearchRegion(SearchRegion_Rect);
-            _ToolSaveManager.SetEdge1Polarity(comboPolarity.Text);
-            _ToolSaveManager.SetThreshold(txtThreshold.Text);
-            _ToolSaveManager.SetFilterSize(txtFilterSize.Text);
-
-            _ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.Caliper, strMode);
-
-            _ToolSaveManager.ToolParamSave(modelListPath, "Caliper", ModelToolName.Text);
+            ToolSaveManager.SearchRegion_Rect = SearchRegion_Rect;
+            ToolSaveManager.Polarity = comboPolarity.Text;
+            ToolSaveManager.Threshold = txtThreshold.Text;
+            ToolSaveManager.FilterSize = txtFilterSize.Text;
+            ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.Caliper, strMode);
+            ToolSaveManager.ToolParamSave(modelListPath, "Caliper", ModelToolName.Text);
         }
 
         public bool StartRun(ICogImage cogImage, CogDisplay display)

@@ -256,30 +256,26 @@ namespace VisionProTest
             if (CogDisplay.Image == null)
                 return;
 
-            if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                return;
-
             if (ModelToolName.Text == "" || ModelToolName.Text == null)
             {
                 MessageBox.Show("이름을 입력 해주세요.", "확인");
                 return;
             }
 
-            ToolSaveManager _ToolSaveManager = new ToolSaveManager();
+            if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                return;
 
-            _ToolSaveManager.SetSearchRegion(SearchRegion_Rect);
-            _ToolSaveManager.SetTrainRegion(TrainRegion_Rect);
-            _ToolSaveManager.SetThreshold(txtThreshold.Text);
-            _ToolSaveManager.SetAngleLow(txtAngleLow.Text);
-            _ToolSaveManager.SetAngleHigh(txtAngleHigh.Text);
-            _ToolSaveManager.SetScaleLow(txtScaleLow.Text);
-            _ToolSaveManager.SetScaleHigh(txtScaleHigh.Text);
-            _ToolSaveManager.SetApprox(txtApprox.Text);
-            _ToolSaveManager.SetIsHighSensitivity(Convert.ToString(chkHighSensitivity.Checked));
-
-            _ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.PMAlign);
-
-            _ToolSaveManager.ToolParamSave(ModelListPath + ModelName + "\\", "PMAlign", ModelToolName.Text);
+            ToolSaveManager.SearchRegion_Rect = SearchRegion_Rect;
+            ToolSaveManager.TrainRegion_Rect = TrainRegion_Rect;
+            ToolSaveManager.Threshold = txtThreshold.Text;
+            ToolSaveManager.AngleLow = txtAngleLow.Text;
+            ToolSaveManager.AngleHigh = txtAngleHigh.Text;
+            ToolSaveManager.ScaleLow = txtScaleLow.Text;
+            ToolSaveManager.ScaleHigh = txtScaleHigh.Text;
+            ToolSaveManager.Approx = txtApprox.Text;
+            ToolSaveManager.IsHighSensitivity = Convert.ToString(chkHighSensitivity.Checked);
+            ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.PMAlign);
+            ToolSaveManager.ToolParamSave(ModelListPath + ModelName + "\\", "PMAlign", ModelToolName.Text);
         }
 
         public bool StartRun(ICogImage cogImage, CogDisplay display)

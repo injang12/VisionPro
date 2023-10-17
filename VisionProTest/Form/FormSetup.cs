@@ -17,7 +17,6 @@ namespace VisionProTest
         private FormToolCaliper _FormToolCaliper;
 
         private readonly ImageManager _ImageManager = new ImageManager();
-        private readonly INIFiles _INIFiles = new INIFiles();
 
         private static string strSelectedName;
         private string toolName;
@@ -39,19 +38,19 @@ namespace VisionProTest
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            _INIFiles.Set_INI_Path(listPath);
+            INIFiles.Set_INI_Path(listPath);
 
             if (!File.Exists(listPath))
             {
                 using (File.Create(listPath))
                 {
                 }
-                _INIFiles.WriteValue("COMMON", "Total", "0");
+                INIFiles.WriteValue("COMMON", "Total", "0");
             }
 
             cogDisplaySetup.Image = _ImageManager.Load_ImageFile(Application.StartupPath + "\\Images\\Sample1.bmp");
 
-            double count = Convert.ToDouble(_INIFiles.ReadValue("COMMON", "Total"));
+            double count = Convert.ToDouble(INIFiles.ReadValue("COMMON", "Total"));
 
             FolderList.Items.Clear();
 
@@ -60,8 +59,8 @@ namespace VisionProTest
                 string[] arrData = new string[3];
 
                 arrData[0] = (FolderList.Items.Count + 1).ToString();
-                arrData[1] = _INIFiles.ReadValue($"Folder{i}", "Name");
-                arrData[2] = _INIFiles.ReadValue($"Folder{i}", "Tool");
+                arrData[1] = INIFiles.ReadValue($"Folder{i}", "Name");
+                arrData[2] = INIFiles.ReadValue($"Folder{i}", "Tool");
 
                 FolderList.Items.Add(new ListViewItem(arrData));
             }
@@ -103,28 +102,28 @@ namespace VisionProTest
             _FormToolPattern = new FormToolPattern();
             _FormToolCaliper = new FormToolCaliper();
 
-            _INIFiles.Set_INI_Path(iniPath);
+            INIFiles.Set_INI_Path(iniPath);
 
-            int count = Convert.ToInt16(_INIFiles.ReadValue("COMMON", "Total"));
+            int count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
             bool isRun = true;
 
             for (int i = 0; i < count; i++)
             {
-                _INIFiles.Set_INI_Path(iniPath);
+                INIFiles.Set_INI_Path(iniPath);
 
-                string tool = _INIFiles.ReadValue($"{i + 1}", "Tool");
-                string name = _INIFiles.ReadValue($"{i + 1}", "Name");
+                string tool = INIFiles.ReadValue($"{i + 1}", "Tool");
+                string name = INIFiles.ReadValue($"{i + 1}", "Name");
                 int total;
 
                 switch (tool)
                 {
                     case "PMAlign":
-                        _INIFiles.Set_INI_Path(path + "PMAlign.ini");
-                        total = Convert.ToInt16(_INIFiles.ReadValue("COMMON", "Total"));
+                        INIFiles.Set_INI_Path(path + "PMAlign.ini");
+                        total = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
 
                         for (int j = 0; j < total; j++)
                         {
-                            if (name == _INIFiles.ReadValue($"PATTERN{j + 1}", "Name"))
+                            if (name == INIFiles.ReadValue($"PATTERN{j + 1}", "Name"))
                             {
                                 _FormToolPattern.LoadParam(j);
                                 _FormToolPattern.Train_Pattern(true, image);
@@ -134,12 +133,12 @@ namespace VisionProTest
                         }
                         break;
                     case "Caliper":
-                        _INIFiles.Set_INI_Path(path + "Caliper.ini");
-                        total = Convert.ToInt16(_INIFiles.ReadValue("COMMON", "Total"));
+                        INIFiles.Set_INI_Path(path + "Caliper.ini");
+                        total = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
 
                         for (int j = 0; j < total; j++)
                         {
-                            if (name == _INIFiles.ReadValue($"CALIPER{j + 1}", "Name"))
+                            if (name == INIFiles.ReadValue($"CALIPER{j + 1}", "Name"))
                             {
                                 _FormToolCaliper.LoadParam(j);
                                 isRun = _FormToolCaliper.StartRun(image, display);
@@ -166,9 +165,8 @@ namespace VisionProTest
             txtSelectName.Text = strSelectedName;
 
             ToolLoadManager toolLoad = new ToolLoadManager();
-            ToolSaveManager toolSave = new ToolSaveManager();
             toolLoad.SelectModel(strSelectedName);
-            toolSave.SelectModel(strSelectedName);
+            ToolSaveManager.SelectModelName = strSelectedName;
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
@@ -176,12 +174,12 @@ namespace VisionProTest
             if (txtName.Text == "" || txtName.Text == null)
                 return;
 
-            _INIFiles.Set_INI_Path(listPath);
+            INIFiles.Set_INI_Path(listPath);
 
-            int count = Convert.ToInt16(_INIFiles.ReadValue("COMMON", "Total"));
+            int count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
 
-            _INIFiles.WriteValue("COMMON", "Total", $"{count + 1}");
-            _INIFiles.WriteValue("Folder" + $"{count}", "Name", txtName.Text);
+            INIFiles.WriteValue("COMMON", "Total", $"{count + 1}");
+            INIFiles.WriteValue("Folder" + $"{count}", "Name", txtName.Text);
 
             Directory.CreateDirectory(folderPath + $"\\{txtName.Text}");
 
@@ -224,20 +222,20 @@ namespace VisionProTest
                 FolderList.Items[i].SubItems[0].Text = (i + 1).ToString();
             }
 
-            _INIFiles.Set_INI_Path(listPath);
+            INIFiles.Set_INI_Path(listPath);
 
-            _INIFiles.WriteValue("COMMON", "Total", FolderList.Items.Count.ToString());
+            INIFiles.WriteValue("COMMON", "Total", FolderList.Items.Count.ToString());
 
             for (int i = 0; i < FolderList.Items.Count; i++)
             {
                 ListViewItem item = FolderList.Items[i];
 
-                _INIFiles.WriteValue("Folder" + i, "Name", item.SubItems[1].Text);
+                INIFiles.WriteValue("Folder" + i, "Name", item.SubItems[1].Text);
             }
 
             for (int j = FolderList.Items.Count; j < FolderList.Items.Count + 1; j++)
             {
-                _INIFiles.WriteValue("Folder" + j, null, null);
+                INIFiles.WriteValue("Folder" + j, null, null);
             }
 
             Directory.Delete(strPath, true);
@@ -265,21 +263,21 @@ namespace VisionProTest
             ModelToolList.Items.Clear();
             string iniPath = folderPath + $"\\{strSelectedName}\\PMAlign.ini";
 
-            _INIFiles.Set_INI_Path(iniPath);
+            INIFiles.Set_INI_Path(iniPath);
 
             if (!File.Exists(iniPath))
             {
                 using (FileStream fs = File.Create(iniPath))
                 {
                 }
-                _INIFiles.WriteValue("COMMON", "Total", "0");
+                INIFiles.WriteValue("COMMON", "Total", "0");
             }
 
-            int count = Convert.ToInt16(_INIFiles.ReadValue("COMMON", "Total"));
+            int count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
 
             for (int i = 0; i < count; i++)
             {
-                toolName = _INIFiles.ReadValue("PATTERN" + (i + 1), "Name");
+                toolName = INIFiles.ReadValue("PATTERN" + (i + 1), "Name");
 
                 if (!string.IsNullOrEmpty(toolName))
                 {
@@ -311,16 +309,16 @@ namespace VisionProTest
             string iniPath = folderPath + $"\\{strSelectedName}\\Caliper.ini";
             int count;
 
-            _INIFiles.Set_INI_Path(iniPath);
+            INIFiles.Set_INI_Path(iniPath);
 
             if (File.Exists(iniPath))
-                count = Convert.ToInt16(_INIFiles.ReadValue("COMMON", "Total"));
+                count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
             else
                 return;
 
             for (int i = 0; i < count; i++)
             {
-                toolName = _INIFiles.ReadValue("CALIPER" + (i + 1), "Name");
+                toolName = INIFiles.ReadValue("CALIPER" + (i + 1), "Name");
 
                 if (!string.IsNullOrEmpty(toolName))
                 {

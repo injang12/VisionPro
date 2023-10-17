@@ -197,10 +197,8 @@ namespace VisionProTest
 
         private void BtnCountClear(object sender, EventArgs e)   // 이미지(H/W) 카운트 초기화 이벤트
         {
-            INIFiles INIfile = new INIFiles();
-
-            INIfile.Set_INI_Path(Application.StartupPath + "\\CONFIG\\ImageCount.ini");
-            INIfile.WriteValue("COMMON", "Count", "0");
+            INIFiles.Set_INI_Path(Application.StartupPath + "\\CONFIG\\ImageCount.ini");
+            INIFiles.WriteValue("COMMON", "Count", "0");
             Print_Log("카운트 초기화 완료!" + Environment.NewLine + "현재 카운트: 0");
         }
 
