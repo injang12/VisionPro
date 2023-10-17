@@ -16,12 +16,12 @@ namespace VisionProTest
     {
         public static CogRectangleAffine SearchRegion_Rect { get; set; } = new CogRectangleAffine();
         public static CogRectangleAffine TrainRegion_Rect { get; set; } = new CogRectangleAffine();
-        private CogDisplay TrainDisplay { get; set; } = new CogDisplay();
         public static CogRecordDisplay CogDisplay { get; set; } = new CogRecordDisplay();
 
-        private CogPMAlignTool PMAlignTool { get; } = new CogPMAlignTool();
-        private CogPixelMapTool PixelMapTool { get; } = new CogPixelMapTool();
-        private ImageManager Image_Manager { get; } = new ImageManager();
+        private readonly CogPMAlignTool PMAlignTool = new CogPMAlignTool();
+        private readonly CogPixelMapTool PixelMapTool = new CogPixelMapTool();
+        private readonly CogDisplay TrainDisplay = new CogDisplay();
+        private readonly ImageManager Image_Manager = new ImageManager();
 
         public static string ModelName { get; set; }
         private string ModelListPath { get; set; } = Application.StartupPath + $"\\CONFIG\\ModelList\\{ModelName}\\";

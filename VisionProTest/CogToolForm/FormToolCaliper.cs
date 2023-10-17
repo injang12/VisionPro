@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Reflection;
 
 namespace VisionProTest
 {
