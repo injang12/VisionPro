@@ -10,10 +10,7 @@ namespace VisionProTest
     internal class ToolLoadManager
     {
         private readonly static CogRectangleAffine SearchRegion_Rect = new CogRectangleAffine();
-        private readonly static CogRectangleAffine TrainRegion_Rect = new CogRectangleAffine();
 
-        private bool caliperMode;
-        private int polarity;
         private static string toolName;
 
         private readonly string path = Application.StartupPath + "\\CONFIG\\ModelList\\";
@@ -41,118 +38,99 @@ namespace VisionProTest
             SearchRegion_Rect.SideXLength = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "Width"));
             SearchRegion_Rect.SideYLength = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "Height"));
             SearchRegion_Rect.Rotation = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "Rotation"));
-
+            
             return SearchRegion_Rect;
         }
 
-        public CogRectangleAffine GetTrainRegion(int _index)
+        public static void GetTrainRegion(int _index)
         {
-            TrainRegion_Rect.CenterX = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "CenterX"));
-            TrainRegion_Rect.CenterY = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "CenterY"));
-            TrainRegion_Rect.SideXLength = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "Width"));
-            TrainRegion_Rect.SideYLength = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "Height"));
-            TrainRegion_Rect.Rotation = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "Rotation"));
-
-            return TrainRegion_Rect;
+            FormToolPattern.TrainRegion_Rect.CenterX = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "CenterX"));
+            FormToolPattern.TrainRegion_Rect.CenterY = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "CenterY"));
+            FormToolPattern.TrainRegion_Rect.SideXLength = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "Width"));
+            FormToolPattern.TrainRegion_Rect.SideYLength = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "Height"));
+            FormToolPattern.TrainRegion_Rect.Rotation = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "Rotation"));
         }
 
-        public string GetThreshold(int _index)
+        public static string GetThreshold(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "Threshold", "0.5");
         }
 
-        public string GetAngleLow(int _index)
+        public static string GetAngleLow(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "AngleLow", "0");
         }
 
-        public string GetAngleHigh(int _index)
+        public static string GetAngleHigh(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "AngleHigh", "0");
         }
 
-        public string GetScaleLow(int _index)
+        public static string GetScaleLow(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "ScaleLow", "1");
         }
 
-        public string GetScaleHigh(int _index)
+        public static string GetScaleHigh(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "ScaleHigh", "1");
         }
 
-        public string GetApprox(int _index)
+        public static string GetApprox(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "Approx", "1");
         }
 
-        public bool GetIsHighSensitivity(int _index)
+        public static bool GetIsHighSensitivity(int _index)
         {
             return Convert.ToBoolean(INIFiles.GetParam($"{toolName}{_index + 1}", "HighSensitivity", "False"));
         }
 
-        public string GetModelToolName(int _index)
+        public static string GetModelToolName(int _index)
         {
             return INIFiles.ReadValue($"{toolName}{_index + 1}", "Name");
         }
 
-        public bool GetMode(int _index)
+        public static bool GetMode(int _index)
         {
-            switch (INIFiles.ReadValue($"MODE{_index + 1}", "Type"))
-            {
-                case "Single":
-                    caliperMode = false;
-                    break;
-                default:
-                    caliperMode = true;
-                    break;
-            }
-
-            return caliperMode;
+            if (INIFiles.ReadValue($"MODE{_index + 1}", "Type") == "Single")
+                return false;
+            else
+                return true;
         }
 
-        public int GetEdge1Polarity(int _index)
+        public static int GetEdge1Polarity(int _index)
         {
             switch (INIFiles.ReadValue($"Edge1_{_index + 1}", "Polarity"))
             {
                 case "Dark to Light":
-                    polarity = 0;
-                    break;
+                    return 0;
                 case "Light to Dark":
-                    polarity = 1;
-                    break;
+                    return 1;
                 default:
-                    polarity = 2;
-                    break;
+                    return 2;
             }
-
-            return polarity;
         }
 
-        public int GetEdge2Polarity(int _index)
+        public static int GetEdge2Polarity(int _index)
         {
             switch (INIFiles.ReadValue($"Edge2_{_index + 1}", "Polarity"))
             {
                 case "Dark to Light":
-                    polarity = 0;
-                    break;
+                    return 0;
                 case "Light to Dark":
-                    polarity = 1;
-                    break;
+                    return 1;
                 default:
-                    polarity = 2;
-                    break;
+                    return 2;
             }
-
-            return polarity;
         }
 
-        public string GetFilterSize(int _index)
+        public static string GetFilterSize(int _index)
         {
             return INIFiles.ReadValue($"CALIPER{_index + 1}", "FilterSize");
         }
 
-        public string GetEdgePairWidth(int _index)
+        public static string GetEdgePairWidth(int _index)
         {
             return INIFiles.ReadValue($"CALIPER{_index + 1}", "Edge Pair Width");
         }

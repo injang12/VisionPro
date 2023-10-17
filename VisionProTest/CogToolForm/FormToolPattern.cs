@@ -14,8 +14,8 @@ namespace VisionProTest
 {
     public partial class FormToolPattern : Form
     {
-        private CogRectangleAffine SearchRegion_Rect { get; set; } = new CogRectangleAffine();
-        private CogRectangleAffine TrainRegion_Rect { get; set; } = new CogRectangleAffine();
+        public static CogRectangleAffine SearchRegion_Rect { get; set; } = new CogRectangleAffine();
+        public static CogRectangleAffine TrainRegion_Rect { get; set; } = new CogRectangleAffine();
         private CogDisplay TrainDisplay { get; set; } = new CogDisplay();
         public static CogRecordDisplay CogDisplay { get; set; } = new CogRecordDisplay();
 
@@ -49,17 +49,17 @@ namespace VisionProTest
             ToolLoadManager _ToolLoadManager = new ToolLoadManager();
 
             _ToolLoadManager.SetINIPath(UcDefine.PMAlign);
-
             SearchRegion_Rect = _ToolLoadManager.GetSearchRegion(_index);
-            TrainRegion_Rect = _ToolLoadManager.GetTrainRegion(_index);
-            txtThreshold.Text = _ToolLoadManager.GetThreshold(_index);
-            txtAngleLow.Text = _ToolLoadManager.GetAngleLow(_index);
-            txtAngleHigh.Text = _ToolLoadManager.GetAngleHigh(_index);
-            txtScaleLow.Text = _ToolLoadManager.GetScaleLow(_index);
-            txtScaleHigh.Text = _ToolLoadManager.GetScaleHigh(_index);
-            txtApprox.Text = _ToolLoadManager.GetApprox(_index);
-            chkHighSensitivity.Checked = _ToolLoadManager.GetIsHighSensitivity(_index);
-            ModelToolName.Text = _ToolLoadManager.GetModelToolName(_index);
+
+            ToolLoadManager.GetTrainRegion(_index);
+            txtThreshold.Text = ToolLoadManager.GetThreshold(_index);
+            txtAngleLow.Text = ToolLoadManager.GetAngleLow(_index);
+            txtAngleHigh.Text = ToolLoadManager.GetAngleHigh(_index);
+            txtScaleLow.Text = ToolLoadManager.GetScaleLow(_index);
+            txtScaleHigh.Text = ToolLoadManager.GetScaleHigh(_index);
+            txtApprox.Text = ToolLoadManager.GetApprox(_index);
+            chkHighSensitivity.Checked = ToolLoadManager.GetIsHighSensitivity(_index);
+            ModelToolName.Text = ToolLoadManager.GetModelToolName(_index);
         }
 
         public bool Train_Pattern(bool fileLoad, ICogImage image, CogDisplay display = null)

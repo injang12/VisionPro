@@ -221,18 +221,18 @@ namespace VisionProTest
             _ToolLoadManager.SetINIPath(UcDefine.Caliper);
 
             SearchRegion_Rect = _ToolLoadManager.GetSearchRegion(_index);
-            DoubleEdged.Checked = _ToolLoadManager.GetMode(_index);
-            comboPolarity.SelectedIndex = _ToolLoadManager.GetEdge1Polarity(_index);
+            DoubleEdged.Checked = ToolLoadManager.GetMode(_index);
+            comboPolarity.SelectedIndex = ToolLoadManager.GetEdge1Polarity(_index);
 
             if (DoubleEdged.Checked)
-                comboPolarity2.SelectedIndex = _ToolLoadManager.GetEdge2Polarity(_index);
+                comboPolarity2.SelectedIndex = ToolLoadManager.GetEdge2Polarity(_index);
 
-            txtThreshold.Text = _ToolLoadManager.GetThreshold(_index);
-            txtFilterSize.Text = _ToolLoadManager.GetFilterSize(_index);
+            txtThreshold.Text = ToolLoadManager.GetThreshold(_index);
+            txtFilterSize.Text = ToolLoadManager.GetFilterSize(_index);
 
             if (DoubleEdged.Checked)
-                txtEdgePairWidth.Text = _ToolLoadManager.GetEdgePairWidth(_index);
-            ModelToolName.Text = _ToolLoadManager.GetModelToolName(_index);
+                txtEdgePairWidth.Text = ToolLoadManager.GetEdgePairWidth(_index);
+            ModelToolName.Text = ToolLoadManager.GetModelToolName(_index);
         }
 
         private void DoubleEdged_CheckedChanged(object sender, EventArgs e)
