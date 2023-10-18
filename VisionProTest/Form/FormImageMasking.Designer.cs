@@ -59,6 +59,7 @@
             this.Controls.Add(this.BtnApply);
             this.Controls.Add(this.cogImageMaskingEditV2);
             this.Name = "FormImageMasking";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormImageMasking";
             this.Load += new System.EventHandler(this.FormImageMasking_Load);
             this.ResumeLayout(false);

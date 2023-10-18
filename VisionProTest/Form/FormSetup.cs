@@ -76,7 +76,7 @@ namespace VisionProTest
             ModelToolList.Items.Add(_toolName);
         }
 
-        public void ToolListLoad(string _toolName)    // ModelToolList에 아이템 추가 안됨
+        public void ToolListLoad(string _toolName)
         {
             if (!string.IsNullOrEmpty(_toolName))
             {
@@ -125,8 +125,8 @@ namespace VisionProTest
                             if (name == INIFiles.ReadValue($"PATTERN{j + 1}", "Name"))
                             {
                                 _FormToolPattern.LoadParam(j);
-                                _FormToolPattern.Train_Pattern(true, image);
-                                isRun = _FormToolPattern.StartRun(image, display);
+                                ToolPattern.Train_Pattern(Convert.ToBoolean(INIFiles.ReadValue($"PATTERN{j + 1}", "HighSensitivity")));
+                                isRun = ToolPattern.Find_Run(image, display);
                                 break;
                             }
                         }
@@ -337,6 +337,9 @@ namespace VisionProTest
         private void BtnImageLoad_Click(object sender, EventArgs e)
         {
             _ImageManager.LoadImage(cogDisplaySetup);
+
+            //class
+            ToolPattern.InputImage = cogDisplaySetup.Image;
         }
 
         private void BtnExit_Click(object sender, EventArgs e)
@@ -359,7 +362,13 @@ namespace VisionProTest
             }
 
             if (File.Exists(imgPath))
+            {
                 cogDisplaySetup.Image = _ImageManager.Load_ImageFile(imgPath);
+
+                //class
+                ToolPattern.InputImage = cogDisplaySetup.Image;
+            }
+                
 
             if (selectedIndex != -1)
             {
@@ -367,6 +376,96 @@ namespace VisionProTest
                     _FormToolPattern.PatternRegist(Convert.ToInt16(selectedIndex));
                 else if (txtToolName.Text == "Caliper")
                     _FormToolCaliper.CaliperRegist(Convert.ToInt16(selectedIndex));
+            }
+        }
+
+        private void BtnToolDelete_Click(object sender, EventArgs e)
+        {
+            if (selectedIndex == -1)
+            {
+                MessageBox.Show("툴이 선택되지 않았습니다.");
+                return;
+            }
+            if (MessageBox.Show("선택한 툴을 삭제하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                return;
+
+            string strToolName = txtToolName.Text;
+            string strPath = folderPath + $"\\{txtSelectName.Text}";
+
+            INIFiles.Set_INI_Path(strPath + $"\\{strToolName}.ini");
+            string _toolName = INIFiles.ReadValue($"PATTERN{selectedIndex + 1}", "Name");
+
+            int toolTotal = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
+            INIFiles.WriteValue("COMMON", "Total", $"{toolTotal - 1}");
+
+            if (strToolName == "PMAlign")
+            {
+                for (int i = 0; i < toolTotal; i++)
+                {
+                    if (i == selectedIndex)
+                    {
+                        string[] regionKeys = { "CenterX", "CenterY", "Width", "Height", "Rotation" };
+                        string[] patternKeys = { "Name", "HighSensitivity", "Accept_Threshold", "AngleLow",
+                            "AngleHigh", "ScaleLow", "ScaleHigh", "Approx" };
+
+                        foreach (string key in regionKeys)
+                        {
+                            string trainValue = INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{i + 2}", key);
+                            string searchValue = INIFiles.ReadValue($"SERACH_REGION_RECT{i + 2}", key);
+
+                            INIFiles.WriteValue($"TRAIN_REGION_RECTANGLE{i + 1}", key, trainValue);
+                            INIFiles.WriteValue($"SERACH_REGION_RECT{i + 1}", key, searchValue);
+                        }
+
+                        foreach (string key in patternKeys)
+                        {
+                            string tempValue = INIFiles.ReadValue($"PATTERN{i + 2}", key);
+                            INIFiles.WriteValue($"PATTERN{i + 1}", key, tempValue);
+                        }
+
+                        break;
+                    }
+                }
+
+                INIFiles.WriteValue($"TRAIN_REGION_RECTANGLE{toolTotal}", null, null);
+                INIFiles.WriteValue($"SERACH_REGION_RECT{toolTotal}", null, null);
+                INIFiles.WriteValue($"PATTERN{toolTotal}", null, null);
+
+                File.Delete($"{strPath}\\Mask_pattern{selectedIndex + 1}.bmp");
+
+                INIFiles.Set_INI_Path(strPath + "\\ToolParam.ini");
+
+                int toolParamTotal = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
+                int index = -1;
+
+                for (int i = 0; i < toolParamTotal; i++)
+                {
+                    string strName = INIFiles.ReadValue($"{i + 1}", "Name");
+                    if (strName == _toolName)
+                    {
+                        index = i + 1;
+
+                        INIFiles.WriteValue("COMMON", "Total", $"{toolParamTotal - 1}");
+                        break;
+                    }
+                }
+
+                for (int i = index; i < toolParamTotal; i++)
+                {
+                    string strtemp1 = INIFiles.ReadValue($"{i + 1}", "Tool");
+                    string strtemp2 = INIFiles.ReadValue($"{i + 1}", "Name");
+
+                    INIFiles.WriteValue($"{i}", "Tool", strtemp1);
+                    INIFiles.WriteValue($"{i}", "Name", strtemp2);
+                }
+
+                INIFiles.WriteValue($"{toolParamTotal}", null, null);
+
+                ModelToolList.SelectedItems[0].Remove();
+            }
+            else if (strToolName == "Caliper")
+            {
+
             }
         }
     }

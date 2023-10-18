@@ -54,6 +54,7 @@
             this.ModelToolList = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtToolName = new System.Windows.Forms.Label();
+            this.BtnToolDelete = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cogDisplaySetup)).BeginInit();
@@ -268,7 +269,7 @@
             this.BtnAcquire.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.BtnAcquire.Location = new System.Drawing.Point(3, 3);
             this.BtnAcquire.Name = "BtnAcquire";
-            this.BtnAcquire.Size = new System.Drawing.Size(150, 60);
+            this.BtnAcquire.Size = new System.Drawing.Size(150, 59);
             this.BtnAcquire.TabIndex = 174;
             this.BtnAcquire.Text = "촬영";
             this.BtnAcquire.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -282,7 +283,7 @@
             this.BtnImageLoad.ForeColor = System.Drawing.Color.Black;
             this.BtnImageLoad.Image = ((System.Drawing.Image)(resources.GetObject("BtnImageLoad.Image")));
             this.BtnImageLoad.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.BtnImageLoad.Location = new System.Drawing.Point(3, 69);
+            this.BtnImageLoad.Location = new System.Drawing.Point(3, 68);
             this.BtnImageLoad.Name = "BtnImageLoad";
             this.BtnImageLoad.Size = new System.Drawing.Size(150, 59);
             this.BtnImageLoad.TabIndex = 174;
@@ -298,9 +299,9 @@
             this.BtnPMAlignToolLoad.ForeColor = System.Drawing.Color.Black;
             this.BtnPMAlignToolLoad.Image = ((System.Drawing.Image)(resources.GetObject("BtnPMAlignToolLoad.Image")));
             this.BtnPMAlignToolLoad.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.BtnPMAlignToolLoad.Location = new System.Drawing.Point(3, 134);
+            this.BtnPMAlignToolLoad.Location = new System.Drawing.Point(3, 133);
             this.BtnPMAlignToolLoad.Name = "BtnPMAlignToolLoad";
-            this.BtnPMAlignToolLoad.Size = new System.Drawing.Size(150, 58);
+            this.BtnPMAlignToolLoad.Size = new System.Drawing.Size(150, 59);
             this.BtnPMAlignToolLoad.TabIndex = 174;
             this.BtnPMAlignToolLoad.Text = "PMAlign";
             this.BtnPMAlignToolLoad.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -326,21 +327,23 @@
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Controls.Add(this.ModelToolList, 0, 4);
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.BtnToolDelete, 0, 4);
             this.tableLayoutPanel4.Controls.Add(this.BtnCaliperToolLoad, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.BtnPMAlignToolLoad, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.BtnImageLoad, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.BtnAcquire, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.ModelToolList, 0, 5);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Right;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(929, 58);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 5;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.RowCount = 6;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 64F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 646F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.Size = new System.Drawing.Size(156, 906);
             this.tableLayoutPanel4.TabIndex = 173;
             // 
@@ -354,7 +357,7 @@
             this.ModelToolList.FullRowSelect = true;
             this.ModelToolList.GridLines = true;
             this.ModelToolList.HideSelection = false;
-            this.ModelToolList.Location = new System.Drawing.Point(3, 263);
+            this.ModelToolList.Location = new System.Drawing.Point(3, 328);
             this.ModelToolList.MultiSelect = false;
             this.ModelToolList.Name = "ModelToolList";
             this.ModelToolList.Scrollable = false;
@@ -380,6 +383,21 @@
             this.txtToolName.Size = new System.Drawing.Size(59, 21);
             this.txtToolName.TabIndex = 174;
             this.txtToolName.Text = "Empty";
+            // 
+            // BtnToolDelete
+            // 
+            this.BtnToolDelete.Font = new System.Drawing.Font("Verdana", 10F);
+            this.BtnToolDelete.ForeColor = System.Drawing.Color.Black;
+            this.BtnToolDelete.Image = ((System.Drawing.Image)(resources.GetObject("BtnToolDelete.Image")));
+            this.BtnToolDelete.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.BtnToolDelete.Location = new System.Drawing.Point(3, 263);
+            this.BtnToolDelete.Name = "BtnToolDelete";
+            this.BtnToolDelete.Size = new System.Drawing.Size(150, 59);
+            this.BtnToolDelete.TabIndex = 177;
+            this.BtnToolDelete.Text = "Delete";
+            this.BtnToolDelete.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.BtnToolDelete.UseVisualStyleBackColor = true;
+            this.BtnToolDelete.Click += new System.EventHandler(this.BtnToolDelete_Click);
             // 
             // FormSetup
             // 
@@ -440,5 +458,6 @@
         private System.Windows.Forms.ListView ModelToolList;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         public System.Windows.Forms.Label txtToolName;
+        private System.Windows.Forms.Button BtnToolDelete;
     }
 }

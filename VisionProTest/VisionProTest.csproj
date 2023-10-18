@@ -161,6 +161,7 @@
     </Compile>
     <Compile Include="Class\ToolSaveManager.cs" />
     <Compile Include="Class\ToolLoadManager.cs" />
+    <Compile Include="Class\ToolPattern.cs" />
     <EmbeddedResource Include="CogToolForm\FormToolCaliper.resx">
       <DependentUpon>FormToolCaliper.cs</DependentUpon>
     </EmbeddedResource>
