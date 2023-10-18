@@ -5,6 +5,7 @@ using ImageFileManager;
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace VisionProTest
@@ -23,6 +24,12 @@ namespace VisionProTest
         {
             InitializeComponent();
             TrainDisplay = cogDisplay_Pattern;
+        }
+
+        public static void MainDisplay_Clear()
+        {
+            CogDisplay.InteractiveGraphics.Clear();
+            CogDisplay.StaticGraphics.Clear();
         }
 
         public void PatternRegist(int _index)
@@ -55,6 +62,16 @@ namespace VisionProTest
             Pattern_Param();
         }
 
+        public static void Pattern_Param(int _index)
+        {
+            ToolPattern.Threshold = Convert.ToDouble(ToolLoadManager.GetThreshold(_index));
+            ToolPattern.AngleLow = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.GetAngleLow(_index)));
+            ToolPattern.AngleHigh = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.GetAngleHigh(_index)));
+            ToolPattern.ScaleLow = Convert.ToDouble(ToolLoadManager.GetScaleLow(_index));
+            ToolPattern.ScaleHigh = Convert.ToDouble(ToolLoadManager.GetScaleHigh(_index));
+            ToolPattern.Approx = Convert.ToInt16(ToolLoadManager.GetApprox(_index));
+        }
+
         private void Pattern_Param()
         {
             ToolPattern.Threshold = Convert.ToDouble(txtThreshold.Text);
@@ -70,8 +87,9 @@ namespace VisionProTest
             if (CogDisplay.Image == null)
                 return;
 
+            MainDisplay_Clear();
+
             ToolPattern.MainDisplay = CogDisplay;
-            ToolPattern.MainDisplay_Clear();
             ToolPattern.TrainRegion_Create();
         }
 
@@ -96,7 +114,7 @@ namespace VisionProTest
             }
             if (FormImageMasking.ImageMasking(CogDisplay.Image, ModelToolName.Text))
             {
-                ToolPattern.Masking(FormImageMasking.MaskingImage);
+                ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
                 Image_Manager.Save_ImageFile(ModelListPath + ModelName + $"\\Mask_{ModelToolName.Text}.bmp", (CogImage8Grey)FormImageMasking.MaskingImage);
             }
         }
@@ -133,7 +151,7 @@ namespace VisionProTest
             if (CogDisplay.Image == null)
                 return;
 
-            ToolPattern.MainDisplay_Clear();
+            MainDisplay_Clear();
             ToolPattern.SearchRegion_Create();
         }
 
@@ -145,6 +163,7 @@ namespace VisionProTest
             CogDisplay.StaticGraphics.Clear();
             CogDisplay.InteractiveGraphics.Clear();
 
+            Pattern_Param();
             ToolPattern.Find_Run(CogDisplay.Image, CogDisplay);
         }
 

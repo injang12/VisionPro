@@ -71,11 +71,6 @@ namespace VisionProTest
             return strSelectedName;
         }
 
-        public void ToolListSave(string _toolName)
-        {
-            ModelToolList.Items.Add(_toolName);
-        }
-
         public void ToolListLoad(string _toolName)
         {
             if (!string.IsNullOrEmpty(_toolName))
@@ -98,8 +93,6 @@ namespace VisionProTest
 
             if (!File.Exists(iniPath))
                 return;
-
-            _FormToolPattern = new FormToolPattern();
 
             INIFiles.Set_INI_Path(iniPath);
 
@@ -124,7 +117,7 @@ namespace VisionProTest
                         {
                             if (name == INIFiles.ReadValue($"PATTERN{j + 1}", "Name"))
                             {
-                                _FormToolPattern.LoadParam(j);
+                                FormToolPattern.Pattern_Param(j);
                                 ToolPattern.Train_Pattern(Convert.ToBoolean(INIFiles.ReadValue($"PATTERN{j + 1}", "HighSensitivity")));
                                 isRun = ToolPattern.Find_Run(image, display);
                                 break;
@@ -151,26 +144,9 @@ namespace VisionProTest
             }
         }
 
-        private void BtnSelect_Click(object sender, EventArgs e)
-        {
-            if (FolderList.SelectedItems.Count == 0)
-                return;
-
-            strSelectedName = FolderList.SelectedItems[0].SubItems[1].Text;
-
-            cogDisplaySetup.StaticGraphics.Clear();
-            cogDisplaySetup.InteractiveGraphics.Clear();
-
-            txtSelectName.Text = strSelectedName;
-
-            ToolLoadManager toolLoad = new ToolLoadManager();
-            toolLoad.SelectModel(strSelectedName);
-            ToolSaveManager.SelectModelName = strSelectedName;
-        }
-
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            if (txtName.Text == "" || txtName.Text == null)
+            if (string.IsNullOrEmpty(txtName.Text))
                 return;
 
             INIFiles.Set_INI_Path(listPath);
@@ -205,8 +181,8 @@ namespace VisionProTest
 
                 cogDisplaySetup.StaticGraphics.Clear();
                 cogDisplaySetup.InteractiveGraphics.Clear();
-                _FormToolPattern?.Dispose();
-                _FormToolCaliper?.Dispose();
+                //_FormToolPattern?.Dispose();
+                //_FormToolCaliper?.Dispose();
 
                 txtSelectName.Text = "EMPTY";
             }
@@ -238,6 +214,24 @@ namespace VisionProTest
             }
 
             Directory.Delete(strPath, true);
+        }
+
+        private void BtnSelect_Click(object sender, EventArgs e)
+        {
+            if (FolderList.SelectedItems.Count == 0)
+                return;
+
+            ModelToolList.Items.Clear();
+
+            strSelectedName = FolderList.SelectedItems[0].SubItems[1].Text;
+
+            cogDisplaySetup.StaticGraphics.Clear();
+            cogDisplaySetup.InteractiveGraphics.Clear();
+
+            txtSelectName.Text = strSelectedName;
+
+            ToolLoadManager.ModelName = strSelectedName;
+            ToolSaveManager.ModelName = strSelectedName;
         }
 
         private void BtnPMAlignToolLoad_Click(object sender, EventArgs e)

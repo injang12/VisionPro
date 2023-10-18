@@ -1,31 +1,28 @@
 ﻿using INIFileManager;
 
-using System.IO;
 using System;
 using System.Windows.Forms;
-using Cognex.VisionPro;
 
 namespace VisionProTest
 {
     internal class ToolLoadManager
     {
-        //private readonly static CogRectangleAffine SearchRegion_Rect = new CogRectangleAffine();
-
         private static string toolName;
 
-        private readonly string path = Application.StartupPath + "\\CONFIG\\ModelList\\";
-        private static string INIPath;
+        public static string INIPath { get; set; } = Application.StartupPath + "\\CONFIG\\ModelList\\";
+        public static string ModelName { get; set; }
+
 
         public static void SetINIPath(int _tool)
         {
-            switch (_tool) // tool 경로 하나로 통합하기
+            switch (_tool)
             {
                 case UcDefine.PMAlign:
-                    INIFiles.Set_INI_Path($"{INIPath}\\PMAlign.ini");
+                    INIFiles.Set_INI_Path($"{INIPath}\\{ModelName}\\PMAlign.ini");
                     toolName = "PATTERN";
                     break;
                 case UcDefine.Caliper:
-                    INIFiles.Set_INI_Path($"{INIPath}\\Caliper.ini");
+                    INIFiles.Set_INI_Path($"{INIPath}\\{ModelName}\\Caliper.ini");
                     toolName = "CALIPER";
                     break;
             }
@@ -35,14 +32,14 @@ namespace VisionProTest
         {
             switch (_tool)
             {
-                case 0:
+                case UcDefine.PMAlign:
                     ToolPattern.SearchRegion_Rect.CenterX = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "CenterX"));
                     ToolPattern.SearchRegion_Rect.CenterY = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "CenterY"));
                     ToolPattern.SearchRegion_Rect.SideXLength = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "Width"));
                     ToolPattern.SearchRegion_Rect.SideYLength = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "Height"));
                     ToolPattern.SearchRegion_Rect.Rotation = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "Rotation"));
                     break;
-                case 1:
+                case UcDefine.Caliper:
                     FormToolCaliper.SearchRegion_Rect.CenterX = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "CenterX"));
                     FormToolCaliper.SearchRegion_Rect.CenterY = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "CenterY"));
                     FormToolCaliper.SearchRegion_Rect.SideXLength = Convert.ToDouble(INIFiles.ReadValue($"SERACH_REGION_RECT{_index + 1}", "Width"));
@@ -143,11 +140,6 @@ namespace VisionProTest
         public static string GetEdgePairWidth(int _index)
         {
             return INIFiles.ReadValue($"CALIPER{_index + 1}", "Edge Pair Width");
-        }
-
-        public void SelectModel(string selectModel)
-        {
-            INIPath = Path.Combine(path, selectModel);
         }
     }
 }

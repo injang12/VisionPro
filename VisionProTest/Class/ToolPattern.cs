@@ -25,12 +25,6 @@ namespace VisionProTest
         public static double Approx { get; set; }
 
 
-        public static void MainDisplay_Clear()
-        {
-            MainDisplay.InteractiveGraphics.Clear();
-            MainDisplay.StaticGraphics.Clear();
-        }
-
         public static void TrainRegion_Create()
         {
             TrainRegion_Rect.GraphicDOFEnable = CogRectangleAffineDOFConstants.All;
@@ -143,6 +137,8 @@ namespace VisionProTest
             }
             else
                 PMAlignTool.InputImage = image;
+
+
 
             PMAlignTool.RunParams.ZoneAngle.Configuration = CogPMAlignZoneConstants.LowHigh;
             PMAlignTool.RunParams.AcceptThreshold = Convert.ToDouble(Threshold);

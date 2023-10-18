@@ -24,7 +24,7 @@ namespace VisionProTest
         public static string Polarity2 { get; set; }
         public static string FilterSize { get; set; }
         public static string EdgePairWidth { get; set; }
-        public static string SelectModelName { get; set; }
+        public static string ModelName { get; set; }
 
         public static void ToolParamSave(string path, string toolName, string name)
         {
@@ -55,7 +55,7 @@ namespace VisionProTest
             switch (_tool)
             {
                 case UcDefine.PMAlign:
-                    string patternPath = Application.StartupPath + $"\\CONFIG\\ModelList\\{SelectModelName}";
+                    string patternPath = Application.StartupPath + $"\\CONFIG\\ModelList\\{ModelName}";
                     
                     if (!Directory.Exists(patternPath))
                         Directory.CreateDirectory(patternPath);
@@ -144,7 +144,7 @@ namespace VisionProTest
                     }
                     break;
                 case UcDefine.Caliper:
-                    string caliperPath = Application.StartupPath + $"\\CONFIG\\ModelList\\{SelectModelName}";
+                    string caliperPath = Application.StartupPath + $"\\CONFIG\\ModelList\\{ModelName}";
 
                     if (!Directory.Exists(caliperPath))
                         Directory.CreateDirectory(caliperPath);

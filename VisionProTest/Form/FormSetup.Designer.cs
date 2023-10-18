@@ -51,10 +51,10 @@
             this.BtnPMAlignToolLoad = new System.Windows.Forms.Button();
             this.BtnCaliperToolLoad = new System.Windows.Forms.Button();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.BtnToolDelete = new System.Windows.Forms.Button();
             this.ModelToolList = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtToolName = new System.Windows.Forms.Label();
-            this.BtnToolDelete = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cogDisplaySetup)).BeginInit();
@@ -347,6 +347,21 @@
             this.tableLayoutPanel4.Size = new System.Drawing.Size(156, 906);
             this.tableLayoutPanel4.TabIndex = 173;
             // 
+            // BtnToolDelete
+            // 
+            this.BtnToolDelete.Font = new System.Drawing.Font("Verdana", 10F);
+            this.BtnToolDelete.ForeColor = System.Drawing.Color.Black;
+            this.BtnToolDelete.Image = ((System.Drawing.Image)(resources.GetObject("BtnToolDelete.Image")));
+            this.BtnToolDelete.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.BtnToolDelete.Location = new System.Drawing.Point(3, 263);
+            this.BtnToolDelete.Name = "BtnToolDelete";
+            this.BtnToolDelete.Size = new System.Drawing.Size(150, 59);
+            this.BtnToolDelete.TabIndex = 177;
+            this.BtnToolDelete.Text = "Delete";
+            this.BtnToolDelete.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.BtnToolDelete.UseVisualStyleBackColor = true;
+            this.BtnToolDelete.Click += new System.EventHandler(this.BtnToolDelete_Click);
+            // 
             // ModelToolList
             // 
             this.ModelToolList.BackColor = System.Drawing.Color.Gainsboro;
@@ -383,21 +398,6 @@
             this.txtToolName.Size = new System.Drawing.Size(59, 21);
             this.txtToolName.TabIndex = 174;
             this.txtToolName.Text = "Empty";
-            // 
-            // BtnToolDelete
-            // 
-            this.BtnToolDelete.Font = new System.Drawing.Font("Verdana", 10F);
-            this.BtnToolDelete.ForeColor = System.Drawing.Color.Black;
-            this.BtnToolDelete.Image = ((System.Drawing.Image)(resources.GetObject("BtnToolDelete.Image")));
-            this.BtnToolDelete.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.BtnToolDelete.Location = new System.Drawing.Point(3, 263);
-            this.BtnToolDelete.Name = "BtnToolDelete";
-            this.BtnToolDelete.Size = new System.Drawing.Size(150, 59);
-            this.BtnToolDelete.TabIndex = 177;
-            this.BtnToolDelete.Text = "Delete";
-            this.BtnToolDelete.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.BtnToolDelete.UseVisualStyleBackColor = true;
-            this.BtnToolDelete.Click += new System.EventHandler(this.BtnToolDelete_Click);
             // 
             // FormSetup
             // 
