@@ -179,7 +179,7 @@ namespace VisionProTest
             Print_Log("라이브 시작...");
             while (isLive)
             {
-                _Camera.AcquireStart(liveDisplay, (double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value);
+                CameraManager.AcquireStart(liveDisplay, (double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value);
                 BtnRun.PerformClick();
             }
             Print_Log("라이브 종료");
@@ -286,7 +286,7 @@ namespace VisionProTest
                 return;
 
             StepFix();
-            _Camera.AcquireStart(mDisplay[nextStep], (double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value);
+            CameraManager.AcquireStart(mDisplay[nextStep], (double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value);
             NextStepCheck();
 
             BtnRun.PerformClick();
@@ -340,7 +340,7 @@ namespace VisionProTest
 
         private void BtnLoadImage_Click(object sender, EventArgs e)   // 이미지 로드 클릭 이벤트
         {
-            if (_ImageManager.LoadImage(mDisplay[selectStep]))
+            if (ImageManager.LoadImage(mDisplay[selectStep]))
                 Print_Log("이미지 불러오기 성공");
             else
                 Print_Log("이미지 불러오기 실패");

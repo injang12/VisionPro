@@ -16,8 +16,6 @@ namespace VisionProTest
         private FormToolPattern _FormToolPattern;
         private FormToolCaliper _FormToolCaliper;
 
-        private readonly ImageManager _ImageManager = new ImageManager();
-
         private static string strSelectedName;
         private string toolName;
         private static int selectedIndex;
@@ -48,7 +46,7 @@ namespace VisionProTest
                 INIFiles.WriteValue("COMMON", "Total", "0");
             }
 
-            cogDisplaySetup.Image = _ImageManager.Load_ImageFile(Application.StartupPath + "\\Images\\Sample1.bmp");
+            cogDisplaySetup.Image = ImageManager.Load_ImageFile(Application.StartupPath + "\\Images\\Sample1.bmp");
 
             double count = Convert.ToDouble(INIFiles.ReadValue("COMMON", "Total"));
 
@@ -179,10 +177,9 @@ namespace VisionProTest
                 if (MessageBox.Show("현재 열려있는 모델입니다.\n삭제 하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     return;
 
-                cogDisplaySetup.StaticGraphics.Clear();
-                cogDisplaySetup.InteractiveGraphics.Clear();
-                //_FormToolPattern?.Dispose();
-                //_FormToolCaliper?.Dispose();
+                cogDisplaySetup.Image = null;
+                FormToolPattern.TrainDisplay.Image = null;
+                ModelToolList.Items.Clear();
 
                 txtSelectName.Text = "EMPTY";
             }
@@ -250,7 +247,7 @@ namespace VisionProTest
                 TopLevel = false,
                 Dock = DockStyle.Fill
             };
-            panel2.Controls.Add(_FormToolPattern);
+            ToolPanel.Controls.Add(_FormToolPattern);
             _FormToolPattern.Show();
 
             ModelToolList.Items.Clear();
@@ -286,7 +283,6 @@ namespace VisionProTest
             _FormToolPattern?.Dispose();
             _FormToolCaliper?.Dispose();
 
-            _FormToolCaliper = new FormToolCaliper();
             FormToolCaliper.ModelName = strSelectedName;
             FormToolCaliper.CogDisplay = cogDisplaySetup;
 
@@ -295,19 +291,23 @@ namespace VisionProTest
                 TopLevel = false,
                 Dock = DockStyle.Fill
             };
-            panel2.Controls.Add(_FormToolCaliper);
+            ToolPanel.Controls.Add(_FormToolCaliper);
             _FormToolCaliper.Show();
 
             ModelToolList.Items.Clear();
             string iniPath = folderPath + $"\\{strSelectedName}\\Caliper.ini";
-            int count;
 
             INIFiles.Set_INI_Path(iniPath);
 
-            if (File.Exists(iniPath))
-                count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
-            else
-                return;
+            if (!File.Exists(iniPath))
+            {
+                using (FileStream fs = File.Create(iniPath))
+                {
+                }
+                INIFiles.WriteValue("COMMON", "Total", "0");
+            }
+
+            int count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
 
             for (int i = 0; i < count; i++)
             {
@@ -324,15 +324,12 @@ namespace VisionProTest
 
         private void BtnAcquire_Click(object sender, EventArgs e)
         {
-            CameraManager _Camera = new CameraManager();
-            _Camera.AcquireStart(cogDisplaySetup, 15, 0, 0);
+            CameraManager.AcquireStart(cogDisplaySetup, 15, 0, 0);   // exp, bright, contrast 값 변수로 받기
         }
 
         private void BtnImageLoad_Click(object sender, EventArgs e)
         {
-            _ImageManager.LoadImage(cogDisplaySetup);
-
-            //class
+            ImageManager.LoadImage(cogDisplaySetup);
             ToolPattern.InputImage = cogDisplaySetup.Image;
         }
 
@@ -357,12 +354,9 @@ namespace VisionProTest
 
             if (File.Exists(imgPath))
             {
-                cogDisplaySetup.Image = _ImageManager.Load_ImageFile(imgPath);
-
-                //class
+                cogDisplaySetup.Image = ImageManager.Load_ImageFile(imgPath);
                 ToolPattern.InputImage = cogDisplaySetup.Image;
             }
-                
 
             if (selectedIndex != -1)
             {
@@ -396,7 +390,7 @@ namespace VisionProTest
             {
                 for (int i = 0; i < toolTotal; i++)
                 {
-                    if (i == selectedIndex)
+                    if (i >= selectedIndex)
                     {
                         string[] regionKeys = { "CenterX", "CenterY", "Width", "Height", "Rotation" };
                         string[] patternKeys = { "Name", "HighSensitivity", "Accept_Threshold", "AngleLow",
@@ -416,8 +410,6 @@ namespace VisionProTest
                             string tempValue = INIFiles.ReadValue($"PATTERN{i + 2}", key);
                             INIFiles.WriteValue($"PATTERN{i + 1}", key, tempValue);
                         }
-
-                        break;
                     }
                 }
 
@@ -459,7 +451,71 @@ namespace VisionProTest
             }
             else if (strToolName == "Caliper")
             {
+                for (int i = 0; i < toolTotal; i++)
+                {
+                    if (i >= selectedIndex)
+                    {
+                        string[] regionKeys = { "CenterX", "CenterY", "Width", "Height", "Rotation" };
+                        string[] caliperKeys = { "Name", "Threshold", "FilterSize", "Edge Pair Width" };
 
+                        foreach (string key in regionKeys)
+                        {
+                            string searchValue = INIFiles.ReadValue($"SERACH_REGION_RECT{i + 2}", key);
+                            INIFiles.WriteValue($"SERACH_REGION_RECT{i + 1}", key, searchValue);
+                        }
+
+                        foreach (string key in caliperKeys)
+                        {
+                            string tempValue = INIFiles.ReadValue($"MODE{i + 2}", "Type");
+                            INIFiles.WriteValue($"MODE{i + 1}", "Type", tempValue);
+
+                            tempValue = INIFiles.ReadValue($"Edge1_{i + 2}", "Polarity");
+                            INIFiles.WriteValue($"Edge1_{i + 1}", "Polarity", tempValue);
+
+                            tempValue = INIFiles.ReadValue($"Edge2_{i + 2}", "Polarity");
+                            INIFiles.WriteValue($"Edge2_{i + 1}", "Polarity", tempValue);
+
+                            tempValue = INIFiles.ReadValue($"CALIPER{i + 2}", key);
+                            INIFiles.WriteValue($"CALIPER{i + 1}", key, tempValue);
+                        }
+                    }
+                }
+
+                INIFiles.WriteValue($"MODE{toolTotal}", null, null);
+                INIFiles.WriteValue($"SERACH_REGION_RECT{toolTotal}", null, null);
+                INIFiles.WriteValue($"Edge1_{toolTotal}", null, null);
+                INIFiles.WriteValue($"Edge2_{toolTotal}", null, null);
+                INIFiles.WriteValue($"CALIPER{toolTotal}", null, null);
+
+                INIFiles.Set_INI_Path(strPath + "\\ToolParam.ini");
+
+                int toolParamTotal = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
+                int index = -1;
+
+                for (int i = 0; i < toolParamTotal; i++)
+                {
+                    string strName = INIFiles.ReadValue($"{i + 1}", "Name");
+                    if (strName == _toolName)
+                    {
+                        index = i + 1;
+
+                        INIFiles.WriteValue("COMMON", "Total", $"{toolParamTotal - 1}");
+                        break;
+                    }
+                }
+
+                for (int i = index; i < toolParamTotal; i++)
+                {
+                    string strtemp1 = INIFiles.ReadValue($"{i + 1}", "Tool");
+                    string strtemp2 = INIFiles.ReadValue($"{i + 1}", "Name");
+
+                    INIFiles.WriteValue($"{i}", "Tool", strtemp1);
+                    INIFiles.WriteValue($"{i}", "Name", strtemp2);
+                }
+
+                INIFiles.WriteValue($"{toolParamTotal}", null, null);
+
+                ModelToolList.SelectedItems[0].Remove();
             }
         }
     }

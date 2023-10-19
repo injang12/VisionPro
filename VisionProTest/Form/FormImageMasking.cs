@@ -11,8 +11,6 @@ namespace VisionProTest
     {
         public static ICogImage MaskingImage { get; set; }
 
-        private static readonly ImageManager Image_Manager = new ImageManager();
-
         private static bool isMask = false;
 
         private static string ModelListPath { get; set; } = Application.StartupPath + $"\\CONFIG\\ModelList\\";
@@ -28,7 +26,7 @@ namespace VisionProTest
             if (!File.Exists(path + $"\\Mask_{_name}.bmp"))
                 return null;
 
-            CogImage8Grey MaskImage = (CogImage8Grey)Image_Manager.Load_ImageFile(path + $"\\Mask_{_name}.bmp");
+            CogImage8Grey MaskImage = (CogImage8Grey)ImageManager.Load_ImageFile(path + $"\\Mask_{_name}.bmp");
 
             return MaskImage;
         }

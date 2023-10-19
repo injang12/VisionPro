@@ -247,6 +247,8 @@ namespace VisionProTest
             txtEdgePairWidth.Visible = DoubleEdged.Checked;
             label6.Visible = DoubleEdged.Checked;
             comboPolarity2.Visible = DoubleEdged.Checked;
+
+            DoubleEdge = DoubleEdged.Checked;
         }
     }
 }

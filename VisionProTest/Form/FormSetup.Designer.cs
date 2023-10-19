@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSetup));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.BtnExit = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.ToolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.cogDisplaySetup = new Cognex.VisionPro.CogRecordDisplay();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.FolderList = new System.Windows.Forms.ListView();
@@ -56,7 +56,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtToolName = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.ToolPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cogDisplaySetup)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -86,20 +86,20 @@
             this.BtnExit.UseVisualStyleBackColor = true;
             this.BtnExit.Click += new System.EventHandler(this.BtnExit_Click);
             // 
-            // panel2
+            // ToolPanel
             // 
-            this.panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.panel2.ColumnCount = 1;
-            this.panel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.panel2.Controls.Add(this.cogDisplaySetup, 0, 0);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(1085, 58);
-            this.panel2.Name = "panel2";
-            this.panel2.RowCount = 2;
-            this.panel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.panel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 370F));
-            this.panel2.Size = new System.Drawing.Size(835, 1022);
-            this.panel2.TabIndex = 1;
+            this.ToolPanel.BackColor = System.Drawing.SystemColors.Control;
+            this.ToolPanel.ColumnCount = 1;
+            this.ToolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.ToolPanel.Controls.Add(this.cogDisplaySetup, 0, 0);
+            this.ToolPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.ToolPanel.Location = new System.Drawing.Point(1085, 58);
+            this.ToolPanel.Name = "ToolPanel";
+            this.ToolPanel.RowCount = 2;
+            this.ToolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.ToolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 370F));
+            this.ToolPanel.Size = new System.Drawing.Size(835, 1022);
+            this.ToolPanel.TabIndex = 1;
             // 
             // cogDisplaySetup
             // 
@@ -416,14 +416,14 @@
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel3);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.ToolPanel);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormSetup";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "ToolManager";
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
+            this.ToolPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cogDisplaySetup)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
@@ -436,7 +436,7 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button BtnExit;
-        private System.Windows.Forms.TableLayoutPanel panel2;
+        private System.Windows.Forms.TableLayoutPanel ToolPanel;
         private Cognex.VisionPro.CogRecordDisplay cogDisplaySetup;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.ListView FolderList;

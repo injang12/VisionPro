@@ -14,7 +14,7 @@ namespace VisionProTest
     {
         public static CogRecordDisplay CogDisplay { get; set; } = new CogRecordDisplay();
 
-        private readonly CogDisplay TrainDisplay = new CogDisplay();
+        public static CogDisplay TrainDisplay = new CogDisplay();
         private readonly ImageManager Image_Manager = new ImageManager();
 
         public static string ModelName { get; set; }
