@@ -11,7 +11,7 @@ namespace VisionProTest
     internal class ToolPattern
     {
         public static ICogImage InputImage { get; set; }
-        public static CogRecordDisplay MainDisplay { get; set; } = new CogRecordDisplay();
+        public static CogRecordDisplay SetupDisplay { get; set; } = new CogRecordDisplay();
         public static CogRectangleAffine TrainRegion_Rect { get; set; } = new CogRectangleAffine();
         public static CogRectangleAffine SearchRegion_Rect { get; set; } = new CogRectangleAffine();
         public static CogPMAlignTool PMAlignTool { get; set; } = new CogPMAlignTool();
@@ -29,7 +29,7 @@ namespace VisionProTest
         {
             TrainRegion_Rect.GraphicDOFEnable = CogRectangleAffineDOFConstants.All;
             TrainRegion_Rect.Interactive = true;
-            MainDisplay.InteractiveGraphics.Add(TrainRegion_Rect, null, false);
+            SetupDisplay.InteractiveGraphics.Add(TrainRegion_Rect, null, false);
         }
 
         public static void Masking(ICogImage _maskImage)
@@ -112,7 +112,7 @@ namespace VisionProTest
             if (SearchRegion_Rect.SelectedColor == CogColorConstants.Red)
                 SearchRegion_Rect.SelectedColor = CogColorConstants.Cyan;
 
-            MainDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
+            SetupDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
         }
 
         public static bool Find_Run(ICogImage image, CogDisplay display)

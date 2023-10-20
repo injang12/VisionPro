@@ -5,7 +5,6 @@ using ImageFileManager;
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace VisionProTest
@@ -26,7 +25,7 @@ namespace VisionProTest
             TrainDisplay = cogDisplay_Pattern;
         }
 
-        public static void MainDisplay_Clear()
+        private static void MainDisplay_Clear()
         {
             CogDisplay.InteractiveGraphics.Clear();
             CogDisplay.StaticGraphics.Clear();
@@ -89,7 +88,7 @@ namespace VisionProTest
 
             MainDisplay_Clear();
 
-            ToolPattern.MainDisplay = CogDisplay;
+            ToolPattern.SetupDisplay = CogDisplay;
             ToolPattern.TrainRegion_Create();
         }
 

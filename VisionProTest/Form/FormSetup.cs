@@ -130,8 +130,9 @@ namespace VisionProTest
                         {
                             if (name == INIFiles.ReadValue($"CALIPER{j + 1}", "Name"))
                             {
-                                FormToolCaliper.SetCaliperParam(j);
-                                isRun = FormToolCaliper.StartRun(image, display);
+                                //FormToolCaliper.SetCaliperParam(j);
+                                FormToolCaliper.Caliper_Param(j);
+                                isRun = ToolCaliper.Find_Run(display);
                                 break;
                             }
                         }
@@ -284,7 +285,7 @@ namespace VisionProTest
             _FormToolCaliper?.Dispose();
 
             FormToolCaliper.ModelName = strSelectedName;
-            FormToolCaliper.CogDisplay = cogDisplaySetup;
+            ToolCaliper.SetupDisplay = cogDisplaySetup;
 
             _FormToolCaliper = new FormToolCaliper
             {
@@ -324,13 +325,28 @@ namespace VisionProTest
 
         private void BtnAcquire_Click(object sender, EventArgs e)
         {
+            if (txtToolName.Text == "Empty")
+            {
+                MessageBox.Show("Tool을 먼저 불러와 주세요.");
+               return;
+            }
+
             CameraManager.AcquireStart(cogDisplaySetup, 15, 0, 0);   // exp, bright, contrast 값 변수로 받기
         }
 
         private void BtnImageLoad_Click(object sender, EventArgs e)
         {
+            if (txtToolName.Text == "Empty")
+            {
+                MessageBox.Show("Tool을 먼저 불러와 주세요.");
+                return;
+            }
+
             ImageManager.LoadImage(cogDisplaySetup);
-            ToolPattern.InputImage = cogDisplaySetup.Image;
+            if (txtToolName.Text == "PMAlign")
+                ToolPattern.InputImage = cogDisplaySetup.Image;
+            else if (txtToolName.Text == "Caliper")
+                ToolCaliper.InputImage = cogDisplaySetup.Image;
         }
 
         private void BtnExit_Click(object sender, EventArgs e)
@@ -355,7 +371,11 @@ namespace VisionProTest
             if (File.Exists(imgPath))
             {
                 cogDisplaySetup.Image = ImageManager.Load_ImageFile(imgPath);
-                ToolPattern.InputImage = cogDisplaySetup.Image;
+
+                if (txtToolName.Text == "PMAlign")
+                    ToolPattern.InputImage = cogDisplaySetup.Image;
+                else if (txtToolName.Text == "Caliper")
+                    ToolPattern.InputImage = cogDisplaySetup.Image;  // 이미지 넣어도 run 하면 null값임
             }
 
             if (selectedIndex != -1)

@@ -37,7 +37,7 @@ namespace VisionProTest
             }
         }
 
-        public static void SetCaliperParam(int _index)
+        private void SetCaliperParam(int _index)
         {
             ToolLoadManager.SetINIPath(UcDefine.Caliper);
             ToolLoadManager.GetSearchRegion(UcDefine.Caliper, _index);
@@ -65,6 +65,36 @@ namespace VisionProTest
             txtFilterSize.Text = FilterSize;
             txtEdgePairWidth.Text = EdgePairWidth;
             ModelToolName.Text = ToolName;
+
+            Caliper_Param();
+        }
+
+        public static void Caliper_Param(int _index)
+        {
+            ToolCaliper.DoubleEdge = ToolLoadManager.GetMode(_index);
+            ToolCaliper.Polarity = ToolLoadManager.GetEdge1Polarity(_index);
+            ToolCaliper.Threshold = Convert.ToDouble(ToolLoadManager.GetThreshold(_index));
+            ToolCaliper.FilterSize = Convert.ToDouble(ToolLoadManager.GetFilterSize(_index));
+
+            if (ToolCaliper.DoubleEdge)
+            {
+                ToolCaliper.Polarity2 = ToolLoadManager.GetEdge2Polarity(_index);
+                ToolCaliper.EdgePairWidth = Convert.ToInt16(ToolLoadManager.GetEdgePairWidth(_index));
+            }
+        }
+
+        private void Caliper_Param()
+        {
+            ToolCaliper.DoubleEdge = DoubleEdged.Checked;
+            ToolCaliper.Polarity = comboPolarity.SelectedIndex;
+            ToolCaliper.Threshold = Convert.ToDouble(txtThreshold.Text);
+            ToolCaliper.FilterSize = Convert.ToDouble(txtFilterSize.Text);
+
+            if (ToolCaliper.DoubleEdge)
+            {
+                ToolCaliper.Polarity2 = comboPolarity2.SelectedIndex;
+                ToolCaliper.EdgePairWidth = Convert.ToInt16(txtEdgePairWidth.Text);
+            }
         }
 
         public static bool StartRun(ICogImage cogImage, CogDisplay display)
@@ -151,26 +181,7 @@ namespace VisionProTest
 
         private void BtnSearchRegion_Click(object sender, EventArgs e)
         {
-            SearchRegion_Rect.GraphicDOFEnable = CogRectangleAffineDOFConstants.All;
-            SearchRegion_Rect.Interactive = true;
-            SearchRegion_Rect.XDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.SolidArrow;
-            SearchRegion_Rect.YDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.Arrow;
-            SearchRegion_Rect.SelectedSpaceName = "#";
-            SearchRegion_Rect.SelectedColor = CogColorConstants.Blue;
-
-            CogDisplay.StaticGraphics.Clear();
-            CogDisplay.InteractiveGraphics.Clear();
-
-            if (!File.Exists(ModelListPath + "Caliper.ini"))
-            {
-                SearchRegion_Rect.CenterX = 500;
-                SearchRegion_Rect.CenterY = 500;
-                SearchRegion_Rect.SideXLength = 200;
-                SearchRegion_Rect.SideYLength = 200;
-                SearchRegion_Rect.Rotation = 0;
-            }
-
-            CogDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
+            ToolCaliper.SearchRegion_Create();
         }
 
         private void BtnFind_Click(object sender, EventArgs e)
@@ -187,9 +198,6 @@ namespace VisionProTest
                 return;
             }
 
-            CogDisplay.StaticGraphics.Clear();
-            CogDisplay.InteractiveGraphics.Clear();
-
             if (threshold > 10000)
                 txtThreshold.Text = "10000";
             else if (threshold < 0)
@@ -200,7 +208,7 @@ namespace VisionProTest
             else if (filterSize > 99999)
                 txtFilterSize.Text = "99999";
 
-            StartRun(CogDisplay.Image, CogDisplay);
+            ToolCaliper.Find_Run(CogDisplay);
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
