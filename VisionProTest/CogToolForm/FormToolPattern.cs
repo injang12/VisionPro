@@ -13,26 +13,10 @@ namespace VisionProTest
     {
         public static CogDisplay TrainDisplay = new CogDisplay();
 
-        public static string ModelName { get; set; }
-
         public FormToolPattern()
         {
             InitializeComponent();
             TrainDisplay = cogDisplay_Pattern;
-        }
-
-        public void PatternRegist(int _index)
-        {
-            if (File.Exists(UcDefine.ModelListPath + ModelName + "\\PMAlign.ini"))
-            {
-                LoadParam(_index);
-            }
-
-            if (File.Exists(UcDefine.ModelListPath + ModelName + "\\MasterImage.bmp"))
-            {
-                ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
-                ToolPattern.Train_Pattern(chkHighSensitivity.Checked, TrainDisplay);
-            }
         }
 
         public void LoadParam(int _index)
@@ -51,6 +35,12 @@ namespace VisionProTest
             ModelToolName.Text = ToolLoadManager.GetModelToolName(_index);
 
             Pattern_Param();
+
+            if (File.Exists(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp"))
+            {
+                ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
+                ToolPattern.Train_Pattern(chkHighSensitivity.Checked, TrainDisplay);
+            }
         }
 
         public static void Pattern_Param(int _index)
@@ -101,7 +91,7 @@ namespace VisionProTest
             if (FormImageMasking.ImageMasking(ToolPattern.SetupDisplay.Image, ModelToolName.Text))
             {
                 ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
-                ImageManager.Save_ImageFile(UcDefine.ModelListPath + ModelName + $"\\Mask_{ModelToolName.Text}.bmp", (CogImage8Grey)FormImageMasking.MaskingImage);
+                ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + $"\\Mask_{ModelToolName.Text}.bmp", (CogImage8Grey)FormImageMasking.MaskingImage);
             }
         }
 
@@ -114,19 +104,7 @@ namespace VisionProTest
                 MessageBox.Show("트레인 실패!");
                 return;
             }
-            ImageManager.Save_ImageFile(UcDefine.ModelListPath + ModelName + "\\MasterImage.bmp", ToolPattern.SetupDisplay.Image);
-        }
-
-        private void BtnDelete_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("패턴을 삭제 하시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                if (File.Exists(UcDefine.ModelListPath + ModelName + "\\Mask.bmp"))
-                    File.Delete(UcDefine.ModelListPath + ModelName + "\\Mask.bmp");
-
-                ToolPattern.PMAlignTool.Pattern.Untrain();
-                TrainDisplay.Image = null;
-            }
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolPattern.SetupDisplay.Image);
         }
 
         private void BtnSearchRegion_Click(object sender, EventArgs e)
@@ -161,7 +139,7 @@ namespace VisionProTest
             ToolSaveManager.Approx = txtApprox.Text;
             ToolSaveManager.IsHighSensitivity = Convert.ToString(chkHighSensitivity.Checked);
             ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.PMAlign);
-            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + ModelName + "\\", "PMAlign", ModelToolName.Text);
+            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", "PMAlign", ModelToolName.Text);
         }
     }
 }

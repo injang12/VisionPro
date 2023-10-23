@@ -33,7 +33,6 @@
             this.label_ToolTitle_Pattern = new System.Windows.Forms.Label();
             this.cogDisplay_Pattern = new Cognex.VisionPro.Display.CogDisplay();
             this.BtnMasking = new System.Windows.Forms.Button();
-            this.BtnDelete = new System.Windows.Forms.Button();
             this.BtnTrain = new System.Windows.Forms.Button();
             this.BtnTrainRegion = new System.Windows.Forms.Button();
             this.txtScaleHigh = new System.Windows.Forms.TextBox();
@@ -87,31 +86,20 @@
             // BtnMasking
             // 
             this.BtnMasking.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnMasking.Location = new System.Drawing.Point(402, 243);
+            this.BtnMasking.Location = new System.Drawing.Point(505, 218);
             this.BtnMasking.Name = "BtnMasking";
-            this.BtnMasking.Size = new System.Drawing.Size(94, 26);
+            this.BtnMasking.Size = new System.Drawing.Size(86, 26);
             this.BtnMasking.TabIndex = 73;
             this.BtnMasking.Text = "Masking";
             this.BtnMasking.UseVisualStyleBackColor = true;
             this.BtnMasking.Click += new System.EventHandler(this.BtnMasking_Click);
             // 
-            // BtnDelete
-            // 
-            this.BtnDelete.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnDelete.Location = new System.Drawing.Point(498, 243);
-            this.BtnDelete.Name = "BtnDelete";
-            this.BtnDelete.Size = new System.Drawing.Size(94, 26);
-            this.BtnDelete.TabIndex = 72;
-            this.BtnDelete.Text = "Delete";
-            this.BtnDelete.UseVisualStyleBackColor = true;
-            this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
-            // 
             // BtnTrain
             // 
             this.BtnTrain.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnTrain.Location = new System.Drawing.Point(498, 218);
+            this.BtnTrain.Location = new System.Drawing.Point(402, 245);
             this.BtnTrain.Name = "BtnTrain";
-            this.BtnTrain.Size = new System.Drawing.Size(94, 26);
+            this.BtnTrain.Size = new System.Drawing.Size(189, 26);
             this.BtnTrain.TabIndex = 71;
             this.BtnTrain.Text = "Train";
             this.BtnTrain.UseVisualStyleBackColor = true;
@@ -122,7 +110,7 @@
             this.BtnTrainRegion.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnTrainRegion.Location = new System.Drawing.Point(402, 218);
             this.BtnTrainRegion.Name = "BtnTrainRegion";
-            this.BtnTrainRegion.Size = new System.Drawing.Size(94, 26);
+            this.BtnTrainRegion.Size = new System.Drawing.Size(103, 26);
             this.BtnTrainRegion.TabIndex = 70;
             this.BtnTrainRegion.Text = "Train Region";
             this.BtnTrainRegion.UseVisualStyleBackColor = true;
@@ -340,7 +328,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BtnMasking);
-            this.Controls.Add(this.BtnDelete);
             this.Controls.Add(this.BtnTrain);
             this.Controls.Add(this.BtnTrainRegion);
             this.Controls.Add(this.cogDisplay_Pattern);
@@ -362,7 +349,6 @@
         private System.Windows.Forms.Label label_ToolTitle_Pattern;
         private Cognex.VisionPro.Display.CogDisplay cogDisplay_Pattern;
         private System.Windows.Forms.Button BtnMasking;
-        private System.Windows.Forms.Button BtnDelete;
         private System.Windows.Forms.Button BtnTrain;
         private System.Windows.Forms.Button BtnTrainRegion;
         private System.Windows.Forms.TextBox txtScaleHigh;

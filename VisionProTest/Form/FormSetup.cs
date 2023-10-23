@@ -8,6 +8,7 @@ using Cameras;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace VisionProTest
 {
@@ -16,7 +17,7 @@ namespace VisionProTest
         private FormToolPattern _FormToolPattern;
         private FormToolCaliper _FormToolCaliper;
 
-        private static string strSelectedName;
+        public static string strSelectedName;
         private string toolName;
         private static int selectedIndex;
 
@@ -233,7 +234,6 @@ namespace VisionProTest
             _FormToolPattern?.Dispose();
             _FormToolCaliper?.Dispose();
 
-            FormToolPattern.ModelName = strSelectedName;
             ToolPattern.SetupDisplay = cogDisplaySetup;
 
             cogDisplaySetup.InteractiveGraphics.Clear();
@@ -280,7 +280,6 @@ namespace VisionProTest
             _FormToolPattern?.Dispose();
             _FormToolCaliper?.Dispose();
 
-            FormToolCaliper.ModelName = strSelectedName;
             ToolCaliper.SetupDisplay = cogDisplaySetup;
 
             _FormToolCaliper = new FormToolCaliper
@@ -377,9 +376,14 @@ namespace VisionProTest
             if (selectedIndex != -1)
             {
                 if (txtToolName.Text == "PMAlign")
-                    _FormToolPattern.PatternRegist(Convert.ToInt16(selectedIndex));
+                    _FormToolPattern.LoadParam(Convert.ToInt16(selectedIndex));
                 else if (txtToolName.Text == "Caliper")
-                    _FormToolCaliper.CaliperRegist(Convert.ToInt16(selectedIndex));
+                {
+                    if (File.Exists(UcDefine.ModelListPath + strSelectedName + "\\Caliper.ini"))
+                    {
+                        _FormToolCaliper.LoadParam(Convert.ToInt16(selectedIndex));
+                    }
+                }
             }
         }
 

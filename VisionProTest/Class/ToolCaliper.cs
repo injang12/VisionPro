@@ -5,7 +5,6 @@ using Cognex.VisionPro.Display;
 using System.Drawing;
 using System;
 using System.IO;
-using System.Windows.Forms;
 
 namespace VisionProTest
 {
@@ -22,8 +21,6 @@ namespace VisionProTest
         public static double Threshold { get; set; }
         public static double FilterSize { get; set; }
         public static double EdgePairWidth { get; set; }
-
-        private static readonly string ModelListPath = Application.StartupPath + $"\\CONFIG\\ModelList\\{FormToolCaliper.ModelName}\\";
 
         public static void SearchRegion_Create()
         {
@@ -42,7 +39,7 @@ namespace VisionProTest
             SetupDisplay.StaticGraphics.Clear();
             SetupDisplay.InteractiveGraphics.Clear();
 
-            if (!File.Exists(ModelListPath + "Caliper.ini"))
+            if (!File.Exists(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\Caliper.ini"))
             {
                 SearchRegion_Rect.CenterX = 500;
                 SearchRegion_Rect.CenterY = 500;
@@ -62,11 +59,6 @@ namespace VisionProTest
 
             CaliperTool.InputImage = InputImage;
             CaliperTool.Region = SearchRegion_Rect;
-
-            CogCaliperScorerContrast ScorerConstrast = new CogCaliperScorerContrast();
-
-            CaliperTool.RunParams.SingleEdgeScorers.Clear();
-            CaliperTool.RunParams.SingleEdgeScorers.Add(ScorerConstrast);
 
             CaliperTool.RunParams.ContrastThreshold = Convert.ToDouble(Threshold);
             CaliperTool.RunParams.FilterHalfSizeInPixels = Convert.ToInt32(FilterSize);
@@ -127,7 +119,6 @@ namespace VisionProTest
             };
 
             display.StaticGraphics.Add(okLabelScore, null);
-
             okLabelScore.Dispose();
 
             return true;

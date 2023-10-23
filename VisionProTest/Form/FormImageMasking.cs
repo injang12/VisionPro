@@ -13,8 +13,6 @@ namespace VisionProTest
 
         private static bool isMask = false;
 
-        private static string ModelListPath { get; set; } = Application.StartupPath + $"\\CONFIG\\ModelList\\";
-
         public FormImageMasking()
         {
             InitializeComponent();
@@ -22,7 +20,7 @@ namespace VisionProTest
 
         public static CogImage8Grey Load_MaskImage(string _name)
         {
-            string path = ModelListPath + $"{FormToolPattern.ModelName}\\";
+            string path = $"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\";
             if (!File.Exists(path + $"\\Mask_{_name}.bmp"))
                 return null;
 

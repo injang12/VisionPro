@@ -1,29 +1,18 @@
 ﻿using ImageFileManager;
 
 using System;
-using System.IO;
 using System.Windows.Forms;
 
 namespace VisionProTest
 {
     public partial class FormToolCaliper : Form
     {
-        public static string ModelName { get; set; }
-
         public FormToolCaliper()
         {
             InitializeComponent();
         }
 
-        public void CaliperRegist(int _index)
-        {
-            if (File.Exists(UcDefine.ModelListPath + ModelName + "\\Caliper.ini"))
-            {
-                LoadParam(_index);
-            }
-        }
-
-        private void LoadParam(int _index)
+        public void LoadParam(int _index)
         {
             ToolLoadManager.SetINIPath(UcDefine.Caliper);
             ToolLoadManager.GetSearchRegion(UcDefine.Caliper, _index);
@@ -117,9 +106,9 @@ namespace VisionProTest
 
             ToolSaveManager.SearchRegion_Rect = ToolCaliper.SearchRegion_Rect;
 
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolCaliper.SetupDisplay.Image);
+            
             string strMode = null;
-
-            ImageManager.Save_ImageFile(UcDefine.ModelListPath + ModelName + "\\MasterImage.bmp", ToolCaliper.SetupDisplay.Image);
 
             switch (DoubleEdged.Checked)
             {
@@ -139,7 +128,7 @@ namespace VisionProTest
             ToolSaveManager.Threshold = txtThreshold.Text;
             ToolSaveManager.FilterSize = txtFilterSize.Text;
             ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.Caliper, strMode);
-            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + ModelName + "\\", "Caliper", ModelToolName.Text);
+            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", "Caliper", ModelToolName.Text);
         }
 
         private void DoubleEdged_CheckedChanged(object sender, EventArgs e)

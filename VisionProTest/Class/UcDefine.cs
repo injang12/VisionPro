@@ -19,7 +19,7 @@ namespace VisionProTest
         public const string Acquire = "Acquire";
         public const string Live = "Live";
 
-        static UcDefine() // 정적 생성자를 사용하여 초기화
+        static UcDefine()
         {
             ModelListPath = Path.Combine(Application.StartupPath, "CONFIG\\ModelList\\");
         }
