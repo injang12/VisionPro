@@ -24,9 +24,19 @@ namespace VisionProTest
         public static double ScaleHigh { get; set; }
         public static double Approx { get; set; }
 
+        private static void MainDisplay_Clear()
+        {
+            SetupDisplay.InteractiveGraphics.Clear();
+            SetupDisplay.StaticGraphics.Clear();
+        }
 
         public static void TrainRegion_Create()
         {
+            if (SetupDisplay.Image == null)
+                return;
+
+            MainDisplay_Clear();
+
             TrainRegion_Rect.GraphicDOFEnable = CogRectangleAffineDOFConstants.All;
             TrainRegion_Rect.Interactive = true;
             SetupDisplay.InteractiveGraphics.Add(TrainRegion_Rect, null, false);
@@ -34,6 +44,9 @@ namespace VisionProTest
 
         public static void Masking(ICogImage _maskImage)
         {
+            if (SetupDisplay.Image == null)
+                return;
+
             PMAlignTool.Pattern.TrainImageMask = (CogImage8Grey)_maskImage;
         }
 
@@ -106,6 +119,11 @@ namespace VisionProTest
 
         public static void SearchRegion_Create()
         {
+            if (SetupDisplay.Image == null)
+                return;
+
+            MainDisplay_Clear();
+
             SearchRegion_Rect.GraphicDOFEnable = CogRectangleAffineDOFConstants.All;
             SearchRegion_Rect.Interactive = true;
 
@@ -115,9 +133,11 @@ namespace VisionProTest
             SetupDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
         }
 
-        public static bool Find_Run(ICogImage image, CogDisplay display)
+        public static bool Find_Run()
         {
-            if (!PMAlignTool.Pattern.Trained)
+            MainDisplay_Clear();
+
+            if (!PMAlignTool.Pattern.Trained || SetupDisplay.Image == null)
                 return false;
 
             PointF _ptResult = new PointF
@@ -125,8 +145,8 @@ namespace VisionProTest
                 X = 0,
                 Y = 0
             };
-
-            if (image.ToString() == "Cognex.VisionPro.CogImage16Range")
+            
+            if (SetupDisplay.Image.ToString() == "Cognex.VisionPro.CogImage16Range")
             {
                 PMAlignTool.InputImage = PixelMapTool.OutputImage;
 
@@ -136,9 +156,7 @@ namespace VisionProTest
                 PMAlignTool.InputImage.SelectedSpaceName = "#";
             }
             else
-                PMAlignTool.InputImage = image;
-
-
+                PMAlignTool.InputImage = SetupDisplay.Image;
 
             PMAlignTool.RunParams.ZoneAngle.Configuration = CogPMAlignZoneConstants.LowHigh;
             PMAlignTool.RunParams.AcceptThreshold = Convert.ToDouble(Threshold);
@@ -158,7 +176,7 @@ namespace VisionProTest
                 SearchRegion_Rect.XDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.None;
                 SearchRegion_Rect.YDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.None;
 
-                display.StaticGraphics.Add(SearchRegion_Rect, "");
+                SetupDisplay.StaticGraphics.Add(SearchRegion_Rect, "");
 
                 CogGraphicLabel ngLabelScore = new CogGraphicLabel
                 {
@@ -169,7 +187,7 @@ namespace VisionProTest
                     Font = new Font("Tahoma", 50.11f)
                 };
 
-                display.StaticGraphics.Add(ngLabelScore, null);
+                SetupDisplay.StaticGraphics.Add(ngLabelScore, null);
                 ngLabelScore.Dispose();
 
                 return false;
@@ -188,7 +206,7 @@ namespace VisionProTest
                     _ptResult.X = (float)m_ResultPos.TranslationX;
                     _ptResult.Y = (float)m_ResultPos.TranslationY;
 
-                    display.StaticGraphics.Add(m_ResultGraphic, null);
+                    SetupDisplay.StaticGraphics.Add(m_ResultGraphic, null);
 
                     CogGraphicLabel labelScore = new CogGraphicLabel
                     {
@@ -198,7 +216,7 @@ namespace VisionProTest
                         Color = CogColorConstants.Blue
                     };
 
-                    display.StaticGraphics.Add(labelScore, null);
+                    SetupDisplay.StaticGraphics.Add(labelScore, null);
 
                     CogGraphicLabel okLabelScore = new CogGraphicLabel
                     {
@@ -209,7 +227,7 @@ namespace VisionProTest
                         Font = new Font("Tahoma", 50.11f)
                     };
 
-                    display.StaticGraphics.Add(okLabelScore, null);
+                    SetupDisplay.StaticGraphics.Add(okLabelScore, null);
 
                     okLabelScore.Dispose();
                 }

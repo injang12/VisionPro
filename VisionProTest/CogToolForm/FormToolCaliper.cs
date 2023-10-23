@@ -1,27 +1,14 @@
-﻿using Cognex.VisionPro;
-using Cognex.VisionPro.Display;
-using Cognex.VisionPro.Caliper;
-
-using ImageFileManager;
+﻿using ImageFileManager;
 
 using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace VisionProTest
 {
     public partial class FormToolCaliper : Form
     {
-        public static CogRectangleAffine SearchRegion_Rect { get; set; } = new CogRectangleAffine();
-        public static CogRecordDisplay CogDisplay { get; set; } = new CogRecordDisplay();
-
         public static string ModelName { get; set; }
-        private string ModelListPath { get; set; } = Application.StartupPath + $"\\CONFIG\\ModelList\\{ModelName}\\";
-
-        private static bool DoubleEdge;
-        private static int Polarity, Polarity2;
-        private static string Threshold, FilterSize, EdgePairWidth, ToolName;
 
         public FormToolCaliper()
         {
@@ -30,47 +17,33 @@ namespace VisionProTest
 
         public void CaliperRegist(int _index)
         {
-            if (File.Exists(ModelListPath + "Caliper.ini"))
+            if (File.Exists(UcDefine.ModelListPath + ModelName + "\\Caliper.ini"))
             {
-                SetCaliperParam(_index);
-                LoadParam();
+                LoadParam(_index);
             }
         }
 
-        private void SetCaliperParam(int _index)
+        private void LoadParam(int _index)
         {
             ToolLoadManager.SetINIPath(UcDefine.Caliper);
             ToolLoadManager.GetSearchRegion(UcDefine.Caliper, _index);
 
-            DoubleEdge = ToolLoadManager.GetMode(_index);
-            Polarity = ToolLoadManager.GetEdge1Polarity(_index);
-
-            if (DoubleEdge)
-                Polarity2 = ToolLoadManager.GetEdge2Polarity(_index);
-
-            Threshold = ToolLoadManager.GetThreshold(_index);
-            FilterSize = ToolLoadManager.GetFilterSize(_index);
-
-            if (DoubleEdge)
-                EdgePairWidth = ToolLoadManager.GetEdgePairWidth(_index);
-            ToolName = ToolLoadManager.GetModelToolName(_index);
-        }
-
-        private void LoadParam()
-        {
-            DoubleEdged.Checked = DoubleEdge;
-            comboPolarity.SelectedIndex = Polarity;
-            comboPolarity2.SelectedIndex = Polarity2;
-            txtThreshold.Text = Threshold;
-            txtFilterSize.Text = FilterSize;
-            txtEdgePairWidth.Text = EdgePairWidth;
-            ModelToolName.Text = ToolName;
+            DoubleEdged.Checked = ToolLoadManager.GetMode(_index);
+            comboPolarity.SelectedIndex = ToolLoadManager.GetEdge1Polarity(_index);
+            comboPolarity2.SelectedIndex = ToolLoadManager.GetEdge2Polarity(_index);
+            txtThreshold.Text = ToolLoadManager.GetThreshold(_index);
+            txtFilterSize.Text = ToolLoadManager.GetFilterSize(_index);
+            txtEdgePairWidth.Text = ToolLoadManager.GetEdgePairWidth(_index);
+            ModelToolName.Text = ToolLoadManager.GetModelToolName(_index);
 
             Caliper_Param();
         }
 
         public static void Caliper_Param(int _index)
         {
+            ToolLoadManager.SetINIPath(UcDefine.Caliper);
+            ToolLoadManager.GetSearchRegion(UcDefine.Caliper, _index);
+
             ToolCaliper.DoubleEdge = ToolLoadManager.GetMode(_index);
             ToolCaliper.Polarity = ToolLoadManager.GetEdge1Polarity(_index);
             ToolCaliper.Threshold = Convert.ToDouble(ToolLoadManager.GetThreshold(_index));
@@ -95,88 +68,6 @@ namespace VisionProTest
                 ToolCaliper.Polarity2 = comboPolarity2.SelectedIndex;
                 ToolCaliper.EdgePairWidth = Convert.ToInt16(txtEdgePairWidth.Text);
             }
-        }
-
-        public static bool StartRun(ICogImage cogImage, CogDisplay display)
-        {
-            int index = Polarity;
-            index++;
-
-            CogCaliperTool CaliperTool = new CogCaliperTool
-            {
-                InputImage = cogImage,
-                Region = SearchRegion_Rect
-            };
-
-            CogCaliperScorerContrast ScorerConstrast = new CogCaliperScorerContrast();
-
-            CaliperTool.RunParams.SingleEdgeScorers.Clear();
-            CaliperTool.RunParams.SingleEdgeScorers.Add(ScorerConstrast);
-
-            CaliperTool.RunParams.ContrastThreshold = Convert.ToDouble(Threshold);
-            CaliperTool.RunParams.FilterHalfSizeInPixels = Convert.ToInt32(FilterSize);
-            CaliperTool.RunParams.Edge0Polarity = (CogCaliperPolarityConstants)index;
-
-            switch (DoubleEdge)
-            {
-                case true:
-                    int index2 = Polarity2;
-                    index2++;
-
-                    CaliperTool.RunParams.EdgeMode = CogCaliperEdgeModeConstants.Pair;
-                    CaliperTool.RunParams.Edge1Polarity = (CogCaliperPolarityConstants)index2;
-                    CaliperTool.RunParams.Edge0Position = -1 * (Convert.ToDouble(EdgePairWidth) / 2);
-                    CaliperTool.RunParams.Edge1Position = Convert.ToDouble(EdgePairWidth) / 2;
-                    break;
-                case false:
-                    CaliperTool.RunParams.EdgeMode = CogCaliperEdgeModeConstants.SingleEdge;
-                    break;
-            }
-
-            CaliperTool.LastRunRecordDiagEnable = CogCaliperLastRunRecordDiagConstants.TransformedRegionPixels;
-
-            CaliperTool.Run();
-
-            if (CaliperTool.Results.Count <= 0 || CaliperTool.Results == null)
-            {
-                SearchRegion_Rect.SelectedColor = CogColorConstants.Red;
-                SearchRegion_Rect.XDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.None;
-                SearchRegion_Rect.YDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.None;
-
-                display.StaticGraphics.Add(SearchRegion_Rect, "");
-
-                CogGraphicLabel ngLabelScore = new CogGraphicLabel
-                {
-                    Text = "NG",
-                    X = 300,
-                    Y = 200,
-                    Color = CogColorConstants.Red,
-                    Font = new Font("Tahoma", 50.11f)
-                };
-
-                display.StaticGraphics.Add(ngLabelScore, null);
-                ngLabelScore.Dispose();
-
-                return false;
-            }
-
-            CogCompositeShape doubleEdgeGrapic = CaliperTool.Results[0].CreateResultGraphics(CogCaliperResultGraphicConstants.All);
-            display.StaticGraphics.Add(doubleEdgeGrapic, "");
-
-            CogGraphicLabel okLabelScore = new CogGraphicLabel
-            {
-                Text = "OK",
-                X = 300,
-                Y = 200,
-                Color = CogColorConstants.Green,
-                Font = new Font("Tahoma", 50.11f)
-            };
-
-            display.StaticGraphics.Add(okLabelScore, null);
-
-            okLabelScore.Dispose();
-
-            return true;
         }
 
         private void BtnSearchRegion_Click(object sender, EventArgs e)
@@ -208,7 +99,9 @@ namespace VisionProTest
             else if (filterSize > 99999)
                 txtFilterSize.Text = "99999";
 
-            ToolCaliper.Find_Run(CogDisplay);
+            Caliper_Param();
+
+            ToolCaliper.Find_Run(ToolCaliper.SetupDisplay);
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -222,10 +115,11 @@ namespace VisionProTest
             if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 return;
 
-            string strMode = null;
-            ImageManager _ImageManager = new ImageManager();
+            ToolSaveManager.SearchRegion_Rect = ToolCaliper.SearchRegion_Rect;
 
-            _ImageManager.Save_ImageFile(ModelListPath + "MasterImage.bmp", CogDisplay.Image);
+            string strMode = null;
+
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + ModelName + "\\MasterImage.bmp", ToolCaliper.SetupDisplay.Image);
 
             switch (DoubleEdged.Checked)
             {
@@ -241,12 +135,11 @@ namespace VisionProTest
                     break;
             }
 
-            ToolSaveManager.SearchRegion_Rect = SearchRegion_Rect;
             ToolSaveManager.Polarity = comboPolarity.Text;
             ToolSaveManager.Threshold = txtThreshold.Text;
             ToolSaveManager.FilterSize = txtFilterSize.Text;
             ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.Caliper, strMode);
-            ToolSaveManager.ToolParamSave(ModelListPath, "Caliper", ModelToolName.Text);
+            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + ModelName + "\\", "Caliper", ModelToolName.Text);
         }
 
         private void DoubleEdged_CheckedChanged(object sender, EventArgs e)
@@ -256,7 +149,7 @@ namespace VisionProTest
             label6.Visible = DoubleEdged.Checked;
             comboPolarity2.Visible = DoubleEdged.Checked;
 
-            DoubleEdge = DoubleEdged.Checked;
+            ToolCaliper.DoubleEdge = DoubleEdged.Checked;
         }
     }
 }

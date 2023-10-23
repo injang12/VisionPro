@@ -1,6 +1,7 @@
 ﻿using Cognex.VisionPro;
 using Cognex.VisionPro.Caliper;
 using Cognex.VisionPro.Display;
+
 using System.Drawing;
 using System;
 using System.IO;
@@ -11,7 +12,6 @@ namespace VisionProTest
     internal class ToolCaliper
     {
         public static ICogImage InputImage { get; set; }
-        public static ICogImage OutputImage { get; set; }
         public static CogRecordDisplay SetupDisplay { get; set; } = new CogRecordDisplay();
         public static CogRectangleAffine SearchRegion_Rect { get; set; } = new CogRectangleAffine();
         public static CogCaliperTool CaliperTool { get; set; } = new CogCaliperTool();
@@ -22,7 +22,6 @@ namespace VisionProTest
         public static double Threshold { get; set; }
         public static double FilterSize { get; set; }
         public static double EdgePairWidth { get; set; }
-        public static double ToolName { get; set; }
 
         private static readonly string ModelListPath = Application.StartupPath + $"\\CONFIG\\ModelList\\{FormToolCaliper.ModelName}\\";
 
@@ -59,8 +58,7 @@ namespace VisionProTest
         {
             MainDisplay_Clear();
 
-            int index = Polarity;
-            index++;
+            Polarity++;
 
             CaliperTool.InputImage = InputImage;
             CaliperTool.Region = SearchRegion_Rect;
@@ -72,16 +70,15 @@ namespace VisionProTest
 
             CaliperTool.RunParams.ContrastThreshold = Convert.ToDouble(Threshold);
             CaliperTool.RunParams.FilterHalfSizeInPixels = Convert.ToInt32(FilterSize);
-            CaliperTool.RunParams.Edge0Polarity = (CogCaliperPolarityConstants)index;
+            CaliperTool.RunParams.Edge0Polarity = (CogCaliperPolarityConstants)Polarity;
 
             switch (DoubleEdge)
             {
                 case true:
-                    int index2 = Polarity2;
-                    index2++;
+                    Polarity2++;
 
                     CaliperTool.RunParams.EdgeMode = CogCaliperEdgeModeConstants.Pair;
-                    CaliperTool.RunParams.Edge1Polarity = (CogCaliperPolarityConstants)index2;
+                    CaliperTool.RunParams.Edge1Polarity = (CogCaliperPolarityConstants)Polarity2;
                     CaliperTool.RunParams.Edge0Position = -1 * (Convert.ToDouble(EdgePairWidth) / 2);
                     CaliperTool.RunParams.Edge1Position = Convert.ToDouble(EdgePairWidth) / 2;
                     break;

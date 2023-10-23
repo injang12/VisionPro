@@ -11,13 +11,9 @@ namespace VisionProTest
 {
     public partial class FormToolPattern : Form
     {
-        public static CogRecordDisplay CogDisplay { get; set; } = new CogRecordDisplay();
-
         public static CogDisplay TrainDisplay = new CogDisplay();
-        private readonly ImageManager Image_Manager = new ImageManager();
 
         public static string ModelName { get; set; }
-        public static string ModelListPath { get; set; } = Application.StartupPath + "\\CONFIG\\ModelList\\";
 
         public FormToolPattern()
         {
@@ -25,18 +21,14 @@ namespace VisionProTest
             TrainDisplay = cogDisplay_Pattern;
         }
 
-        private static void MainDisplay_Clear()
-        {
-            CogDisplay.InteractiveGraphics.Clear();
-            CogDisplay.StaticGraphics.Clear();
-        }
-
         public void PatternRegist(int _index)
         {
-            if (File.Exists(ModelListPath + ModelName + "\\PMAlign.ini"))
+            if (File.Exists(UcDefine.ModelListPath + ModelName + "\\PMAlign.ini"))
+            {
                 LoadParam(_index);
+            }
 
-            if (File.Exists(ModelListPath + ModelName + "\\MasterImage.bmp"))
+            if (File.Exists(UcDefine.ModelListPath + ModelName + "\\MasterImage.bmp"))
             {
                 ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
                 ToolPattern.Train_Pattern(chkHighSensitivity.Checked, TrainDisplay);
@@ -63,6 +55,10 @@ namespace VisionProTest
 
         public static void Pattern_Param(int _index)
         {
+            ToolLoadManager.SetINIPath(UcDefine.PMAlign);
+            ToolLoadManager.GetSearchRegion(UcDefine.PMAlign, _index);
+            ToolLoadManager.GetTrainRegion(_index);
+
             ToolPattern.Threshold = Convert.ToDouble(ToolLoadManager.GetThreshold(_index));
             ToolPattern.AngleLow = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.GetAngleLow(_index)));
             ToolPattern.AngleHigh = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.GetAngleHigh(_index)));
@@ -83,20 +79,11 @@ namespace VisionProTest
 
         private void BtnTrainRegion_Click(object sender, EventArgs e)    // TrainRegion 버튼 클릭 이벤트
         {
-            if (CogDisplay.Image == null)
-                return;
-
-            MainDisplay_Clear();
-
-            ToolPattern.SetupDisplay = CogDisplay;
             ToolPattern.TrainRegion_Create();
         }
 
         private void BtnMasking_Click(object sender, EventArgs e)        // Masking 버튼 클릭 이벤트
         {
-            if (CogDisplay.Image == null)
-                return;
-
             if (string.IsNullOrEmpty(ModelToolName.Text))
             {
                 MessageBox.Show("이름을 입력해 주세요.");
@@ -111,18 +98,15 @@ namespace VisionProTest
                     return;
                 }
             }
-            if (FormImageMasking.ImageMasking(CogDisplay.Image, ModelToolName.Text))
+            if (FormImageMasking.ImageMasking(ToolPattern.SetupDisplay.Image, ModelToolName.Text))
             {
                 ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
-                Image_Manager.Save_ImageFile(ModelListPath + ModelName + $"\\Mask_{ModelToolName.Text}.bmp", (CogImage8Grey)FormImageMasking.MaskingImage);
+                ImageManager.Save_ImageFile(UcDefine.ModelListPath + ModelName + $"\\Mask_{ModelToolName.Text}.bmp", (CogImage8Grey)FormImageMasking.MaskingImage);
             }
         }
 
         private void BtnTrain_Click(object sender, EventArgs e)
         {
-            if (CogDisplay.Image == null)
-                return;
-
             ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
 
             if (!ToolPattern.Train_Pattern(chkHighSensitivity.Checked, TrainDisplay))
@@ -130,15 +114,15 @@ namespace VisionProTest
                 MessageBox.Show("트레인 실패!");
                 return;
             }
-            Image_Manager.Save_ImageFile(ModelListPath + ModelName + "\\MasterImage.bmp", CogDisplay.Image);
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + ModelName + "\\MasterImage.bmp", ToolPattern.SetupDisplay.Image);
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("패턴을 삭제 하시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (File.Exists(ModelListPath + ModelName + "\\Mask.bmp"))
-                    File.Delete(ModelListPath + ModelName + "\\Mask.bmp");
+                if (File.Exists(UcDefine.ModelListPath + ModelName + "\\Mask.bmp"))
+                    File.Delete(UcDefine.ModelListPath + ModelName + "\\Mask.bmp");
 
                 ToolPattern.PMAlignTool.Pattern.Untrain();
                 TrainDisplay.Image = null;
@@ -147,30 +131,17 @@ namespace VisionProTest
 
         private void BtnSearchRegion_Click(object sender, EventArgs e)
         {
-            if (CogDisplay.Image == null)
-                return;
-
-            MainDisplay_Clear();
             ToolPattern.SearchRegion_Create();
         }
 
         private void BtnFind_Click(object sender, EventArgs e)
         {
-            if (CogDisplay.Image == null)
-                return;
-
-            CogDisplay.StaticGraphics.Clear();
-            CogDisplay.InteractiveGraphics.Clear();
-
             Pattern_Param();
-            ToolPattern.Find_Run(CogDisplay.Image, CogDisplay);
+            ToolPattern.Find_Run();
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            if (CogDisplay.Image == null)
-                return;
-
             if (string.IsNullOrEmpty(ModelToolName.Text))
             {
                 MessageBox.Show("이름을 입력 해주세요.", "확인");
@@ -190,7 +161,7 @@ namespace VisionProTest
             ToolSaveManager.Approx = txtApprox.Text;
             ToolSaveManager.IsHighSensitivity = Convert.ToString(chkHighSensitivity.Checked);
             ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.PMAlign);
-            ToolSaveManager.ToolParamSave(ModelListPath + ModelName + "\\", "PMAlign", ModelToolName.Text);
+            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + ModelName + "\\", "PMAlign", ModelToolName.Text);
         }
     }
 }

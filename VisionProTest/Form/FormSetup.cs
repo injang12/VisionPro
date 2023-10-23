@@ -79,11 +79,8 @@ namespace VisionProTest
             }
         }
 
-        public void SelectToolRun(ICogImage image, CogDisplay display)
+        public void SelectToolRun(CogDisplay display)
         {
-            if (image == null || display == null)
-                return;
-
             display.StaticGraphics.Clear();
 
             string path = folderPath + $"\\{strSelectedName}\\";
@@ -117,7 +114,7 @@ namespace VisionProTest
                             {
                                 FormToolPattern.Pattern_Param(j);
                                 ToolPattern.Train_Pattern(Convert.ToBoolean(INIFiles.ReadValue($"PATTERN{j + 1}", "HighSensitivity")));
-                                isRun = ToolPattern.Find_Run(image, display);
+                                isRun = ToolPattern.Find_Run();
                                 break;
                             }
                         }
@@ -130,7 +127,6 @@ namespace VisionProTest
                         {
                             if (name == INIFiles.ReadValue($"CALIPER{j + 1}", "Name"))
                             {
-                                //FormToolCaliper.SetCaliperParam(j);
                                 FormToolCaliper.Caliper_Param(j);
                                 isRun = ToolCaliper.Find_Run(display);
                                 break;
@@ -237,8 +233,8 @@ namespace VisionProTest
             _FormToolPattern?.Dispose();
             _FormToolCaliper?.Dispose();
 
-            FormToolPattern.CogDisplay = cogDisplaySetup;
             FormToolPattern.ModelName = strSelectedName;
+            ToolPattern.SetupDisplay = cogDisplaySetup;
 
             cogDisplaySetup.InteractiveGraphics.Clear();
             cogDisplaySetup.StaticGraphics.Clear();
@@ -375,7 +371,7 @@ namespace VisionProTest
                 if (txtToolName.Text == "PMAlign")
                     ToolPattern.InputImage = cogDisplaySetup.Image;
                 else if (txtToolName.Text == "Caliper")
-                    ToolPattern.InputImage = cogDisplaySetup.Image;  // 이미지 넣어도 run 하면 null값임
+                    ToolCaliper.InputImage = cogDisplaySetup.Image;
             }
 
             if (selectedIndex != -1)
