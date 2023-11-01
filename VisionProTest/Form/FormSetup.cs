@@ -230,6 +230,7 @@ namespace VisionProTest
             _FormToolCaliper?.Dispose();
 
             ToolPattern.SetupDisplay = cogDisplaySetup;
+            ToolPattern.InputImage = cogDisplaySetup.Image;
 
             cogDisplaySetup.InteractiveGraphics.Clear();
             cogDisplaySetup.StaticGraphics.Clear();
@@ -259,7 +260,7 @@ namespace VisionProTest
 
             for (int i = 0; i < count; i++)
             {
-                toolName = INIFiles.ReadValue("PMAlign" + (i + 1), "Name");
+                toolName = INIFiles.ReadValue(UcDefine.strPMAlign + (i + 1), "Name");
 
                 if (!string.IsNullOrEmpty(toolName))
                 {
@@ -267,7 +268,7 @@ namespace VisionProTest
                 }
             }
 
-            txtToolName.Text = "PMAlign";
+            txtToolName.Text = UcDefine.strPMAlign;
         }
 
         private void BtnCaliperToolLoad_Click(object sender, EventArgs e)
@@ -276,6 +277,7 @@ namespace VisionProTest
             _FormToolCaliper?.Dispose();
 
             ToolCaliper.SetupDisplay = cogDisplaySetup;
+            ToolCaliper.InputImage = cogDisplaySetup.Image;
 
             _FormToolCaliper = new FormToolCaliper
             {
@@ -310,7 +312,7 @@ namespace VisionProTest
                 }
             }
 
-            txtToolName.Text = "Caliper";
+            txtToolName.Text = UcDefine.strCaliper;
         }
 
         private void BtnAcquire_Click(object sender, EventArgs e)
@@ -333,9 +335,9 @@ namespace VisionProTest
             }
 
             ImageManager.LoadImage(cogDisplaySetup);
-            if (txtToolName.Text == "PMAlign")
+            if (txtToolName.Text == UcDefine.strPMAlign)
                 ToolPattern.InputImage = cogDisplaySetup.Image;
-            else if (txtToolName.Text == "Caliper")
+            else if (txtToolName.Text == UcDefine.strCaliper)
                 ToolCaliper.InputImage = cogDisplaySetup.Image;
         }
 
@@ -362,17 +364,17 @@ namespace VisionProTest
             {
                 cogDisplaySetup.Image = ImageManager.Load_ImageFile(imgPath);
 
-                if (txtToolName.Text == "PMAlign")
+                if (txtToolName.Text == UcDefine.strPMAlign)
                     ToolPattern.InputImage = cogDisplaySetup.Image;
-                else if (txtToolName.Text == "Caliper")
+                else if (txtToolName.Text == UcDefine.strCaliper)
                     ToolCaliper.InputImage = cogDisplaySetup.Image;
             }
 
             if (selectedIndex != -1)
             {
-                if (txtToolName.Text == "PMAlign")
+                if (txtToolName.Text == UcDefine.strPMAlign)
                     _FormToolPattern.LoadParam(Convert.ToInt16(selectedIndex));
-                else if (txtToolName.Text == "Caliper")
+                else if (txtToolName.Text == UcDefine.strCaliper)
                 {
                     if (File.Exists(UcDefine.ModelListPath + strSelectedName + "\\Caliper.ini"))
                     {
@@ -396,13 +398,13 @@ namespace VisionProTest
             string strPath = folderPath + $"\\{txtSelectName.Text}";
 
             INIFiles.Set_INI_Path(strPath + $"\\{strToolName}.ini");
-            string _toolName = INIFiles.ReadValue($"PATTERN{selectedIndex + 1}", "Name");
 
             int toolTotal = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
             INIFiles.WriteValue("COMMON", "Total", $"{toolTotal - 1}");
 
-            if (strToolName == "PMAlign")
+            if (strToolName == UcDefine.strPMAlign)
             {
+                string toolPMAlignName = INIFiles.ReadValue($"{UcDefine.strPMAlign}{selectedIndex + 1}", "Name");
                 for (int i = 0; i < toolTotal; i++)
                 {
                     if (i >= selectedIndex)
@@ -422,17 +424,17 @@ namespace VisionProTest
 
                         foreach (string key in patternKeys)
                         {
-                            string tempValue = INIFiles.ReadValue($"PATTERN{i + 2}", key);
-                            INIFiles.WriteValue($"PATTERN{i + 1}", key, tempValue);
+                            string tempValue = INIFiles.ReadValue($"{UcDefine.strPMAlign}{i + 2}", key);
+                            INIFiles.WriteValue($"{UcDefine.strPMAlign}{i + 1}", key, tempValue);
                         }
                     }
                 }
 
                 INIFiles.WriteValue($"TRAIN_REGION_RECTANGLE{toolTotal}", null, null);
                 INIFiles.WriteValue($"SERACH_REGION_RECT{toolTotal}", null, null);
-                INIFiles.WriteValue($"PATTERN{toolTotal}", null, null);
+                INIFiles.WriteValue($"{UcDefine.strPMAlign}{toolTotal}", null, null);
 
-                File.Delete($"{strPath}\\Mask_pattern{selectedIndex + 1}.bmp");
+                File.Delete($"{strPath}\\Mask_{ModelToolList.SelectedItems[0].Text}.bmp");
 
                 INIFiles.Set_INI_Path(strPath + "\\ToolParam.ini");
 
@@ -442,7 +444,7 @@ namespace VisionProTest
                 for (int i = 0; i < toolParamTotal; i++)
                 {
                     string strName = INIFiles.ReadValue($"{i + 1}", "Name");
-                    if (strName == _toolName)
+                    if (strName == toolPMAlignName)
                     {
                         index = i + 1;
 
@@ -464,8 +466,9 @@ namespace VisionProTest
 
                 ModelToolList.SelectedItems[0].Remove();
             }
-            else if (strToolName == "Caliper")
+            else if (strToolName == UcDefine.strCaliper)
             {
+                string toolCaliperName = INIFiles.ReadValue($"{UcDefine.strCaliper}{selectedIndex + 1}", "Name");
                 for (int i = 0; i < toolTotal; i++)
                 {
                     if (i >= selectedIndex)
@@ -510,7 +513,7 @@ namespace VisionProTest
                 for (int i = 0; i < toolParamTotal; i++)
                 {
                     string strName = INIFiles.ReadValue($"{i + 1}", "Name");
-                    if (strName == _toolName)
+                    if (strName == toolCaliperName)
                     {
                         index = i + 1;
 

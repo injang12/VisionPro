@@ -1,12 +1,19 @@
 ﻿using ImageFileManager;
 
+using INIFileManager;
+
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace VisionProTest
 {
     public partial class FormToolCaliper : Form
     {
+        private static int total = 0;
+        private static int index = 0;
+        private static bool isOverlap = false;
+
         public FormToolCaliper()
         {
             InitializeComponent();
@@ -59,6 +66,53 @@ namespace VisionProTest
             }
         }
 
+        private static void FileExistsAndCreate(string toolName, string modelToolName)
+        {
+            string ModelPath = $"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\";
+
+            if (!Directory.Exists(ModelPath))
+                Directory.CreateDirectory(ModelPath);
+
+            ModelPath += toolName + ".ini";
+
+            if (!File.Exists(ModelPath))
+            {
+                using (FileStream fs = File.Create(ModelPath))
+                {
+                }
+                INIFiles.Set_INI_Path(ModelPath);
+
+                INIFiles.WriteValue("COMMON", "Total", "0");
+            }
+            else
+            {
+                INIFiles.Set_INI_Path(ModelPath);
+                total = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
+            }
+
+            for (int i = 0; i < total; i++)
+            {
+                if (INIFiles.ReadValue($"{toolName}{(i + 1)}", "Name") == modelToolName)
+                {
+                    isOverlap = true;
+                    index = i + 1;
+                    break;
+                }
+            }
+        }
+
+        private void SaveCaliperParam(int value)
+        {
+            ToolSaveManager.SaveSearchRegion(ToolCaliper.SearchRegion_Rect, value);
+            ToolSaveManager.SaveToolName(UcDefine.strCaliper, ModelToolName.Text, value);
+            ToolSaveManager.SaveThreshold(UcDefine.strCaliper, txtThreshold.Text, value);
+            ToolSaveManager.SaveEdgeType(DoubleEdged.Checked, value);
+            ToolSaveManager.SaveEdgePolarity(comboPolarity.Text, value, 1);
+            ToolSaveManager.SaveEdgePolarity(comboPolarity2.Text, value, 2);
+            ToolSaveManager.SaveFilterSize(txtFilterSize.Text, value);
+            ToolSaveManager.SaveEdgePairWidth(txtEdgePairWidth.Text, value);
+        }
+
         private void BtnSearchRegion_Click(object sender, EventArgs e)
         {
             ToolCaliper.SearchRegion_Create();
@@ -104,31 +158,30 @@ namespace VisionProTest
             if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 return;
 
-            ToolSaveManager.SearchRegion_Rect = ToolCaliper.SearchRegion_Rect;
+            FileExistsAndCreate(UcDefine.strCaliper, ModelToolName.Text);
 
-            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolCaliper.SetupDisplay.Image);
-            
-            string strMode = null;
-
-            switch (DoubleEdged.Checked)
+            if (!isOverlap)
             {
-                case true:
-                    strMode = "Double";
-                    ToolSaveManager.Polarity2 = comboPolarity2.Text;
-                    ToolSaveManager.EdgePairWidth = txtEdgePairWidth.Text;
-                    break;
-                case false:
-                    strMode = "Single";
-                    ToolSaveManager.Polarity2 = "";
-                    ToolSaveManager.EdgePairWidth = "10";
-                    break;
+                if (MessageBox.Show("캘리퍼를 새로 추가 하시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    total++;
+                    INIFiles.WriteValue("COMMON", "Total", Convert.ToString(total));
+
+                    SaveCaliperParam(total);
+                    ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", UcDefine.strCaliper, ModelToolName.Text);
+                }
+                else
+                    return;
+            }
+            else
+            {
+                if (MessageBox.Show("기존 캘리퍼 이름이 같습니다 덮어쓰시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    SaveCaliperParam(index);
+                else
+                    return;
             }
 
-            ToolSaveManager.Polarity = comboPolarity.Text;
-            ToolSaveManager.Threshold = txtThreshold.Text;
-            ToolSaveManager.FilterSize = txtFilterSize.Text;
-            ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.Caliper, strMode);
-            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", "Caliper", ModelToolName.Text);
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolCaliper.SetupDisplay.Image);
         }
 
         private void DoubleEdged_CheckedChanged(object sender, EventArgs e)

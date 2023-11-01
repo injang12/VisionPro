@@ -16,7 +16,6 @@ namespace VisionProTest
 
         private static int total = 0;
         private static int index = 0;
-        private int value = 0;
         private static bool isOverlap = false;
 
         public FormToolPattern()
@@ -108,6 +107,20 @@ namespace VisionProTest
             }
         }
 
+        private void SavePMAlignParam(int value)
+        {
+            ToolSaveManager.SaveTrainRegion(ToolPattern.TrainRegion_Rect, value);
+            ToolSaveManager.SaveSearchRegion(ToolPattern.SearchRegion_Rect, value);
+            ToolSaveManager.SaveToolName(UcDefine.strPMAlign, ModelToolName.Text, value);
+            ToolSaveManager.SaveHighSensitivity(Convert.ToString(chkHighSensitivity.Checked), value);
+            ToolSaveManager.SaveThreshold(UcDefine.strPMAlign, txtThreshold.Text, value);
+            ToolSaveManager.SaveAngleLow(txtAngleLow.Text, value);
+            ToolSaveManager.SaveAngleHigh(txtAngleHigh.Text, value);
+            ToolSaveManager.SaveScaleLow(txtScaleLow.Text, value);
+            ToolSaveManager.SaveScaleHigh(txtScaleHigh.Text, value);
+            ToolSaveManager.SaveApprox(txtApprox.Text, value);
+        }
+
         private void BtnTrainRegion_Click(object sender, EventArgs e)    // TrainRegion 버튼 클릭 이벤트
         {
             ToolPattern.TrainRegion_Create();
@@ -145,7 +158,6 @@ namespace VisionProTest
                 MessageBox.Show("트레인 실패!");
                 return;
             }
-            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolPattern.SetupDisplay.Image);
         }
 
         private void BtnSearchRegion_Click(object sender, EventArgs e)
@@ -178,39 +190,21 @@ namespace VisionProTest
                 {
                     total++;
                     INIFiles.WriteValue("COMMON", "Total", Convert.ToString(total));
-                    value = total;
 
-                    ToolSaveManager.SaveTrainRegion(ToolPattern.TrainRegion_Rect, value);
-                    ToolSaveManager.SaveSearchRegion(ToolPattern.SearchRegion_Rect, value);
-                    ToolSaveManager.SaveToolName(ModelToolName.Text, value);
-                    ToolSaveManager.SaveHighSensitivity(Convert.ToString(chkHighSensitivity.Checked), value);
-                    ToolSaveManager.SaveThreshold(UcDefine.strPMAlign, txtThreshold.Text, value);
-                    ToolSaveManager.SaveAngleLow(txtAngleLow.Text, value);
-                    ToolSaveManager.SaveAngleHigh(txtAngleHigh.Text, value);
-                    ToolSaveManager.SaveScaleLow(txtScaleLow.Text, value);
-                    ToolSaveManager.SaveScaleHigh(txtScaleHigh.Text, value);
-                    ToolSaveManager.SaveApprox(txtApprox.Text, value);
+                    SavePMAlignParam(total);
                     ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", UcDefine.strPMAlign, ModelToolName.Text);
                 }
+                else
+                    return;
             }
             else
             {
                 if (MessageBox.Show("기존 패턴과 이름이 같습니다 덮어쓰시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    value = index;
-
-                    ToolSaveManager.SaveTrainRegion(ToolPattern.TrainRegion_Rect, value);
-                    ToolSaveManager.SaveSearchRegion(ToolPattern.SearchRegion_Rect, value);
-                    ToolSaveManager.SaveToolName(ModelToolName.Text, value);
-                    ToolSaveManager.SaveHighSensitivity(Convert.ToString(chkHighSensitivity.Checked), value);
-                    ToolSaveManager.SaveThreshold(UcDefine.strPMAlign, txtThreshold.Text, value);
-                    ToolSaveManager.SaveAngleLow(txtAngleLow.Text, value);
-                    ToolSaveManager.SaveAngleHigh(txtAngleHigh.Text, value);
-                    ToolSaveManager.SaveScaleLow(txtScaleLow.Text, value);
-                    ToolSaveManager.SaveScaleHigh(txtScaleHigh.Text, value);
-                    ToolSaveManager.SaveApprox(txtApprox.Text, value);
-                }
+                    SavePMAlignParam(index);
+                else
+                    return;
             }
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolPattern.SetupDisplay.Image);
         }
     }
 }
