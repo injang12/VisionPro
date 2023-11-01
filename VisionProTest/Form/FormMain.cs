@@ -76,10 +76,7 @@ namespace VisionProTest
             (screenArrayH, screenArrayW) = await _FormDisplay.WaitForUserInput();
             _FormDisplay.Dispose();
 
-            if (screenArrayH * screenArrayW == 1)
-                isExpansion = false;
-            else
-                isExpansion = true;
+            isExpansion = screenArrayH * screenArrayW != 1;
 
             splash.UpdateProgressBar(100);
             await Task.Run(() => ArrangeScreen(screenArrayW, screenArrayH));
@@ -246,10 +243,7 @@ namespace VisionProTest
 
             DisplayManager.DoubleClickEvent(mDisplay, mLabel, pnlDisplay, selectStep, displayScale);
 
-            if (!displayScale)
-                displayScale = true;
-            else
-                displayScale = false;
+            displayScale = !displayScale;
         }
 
         private void BtnDisplayClear_Click(object sender, EventArgs e)     // 디스플레이 이미지 클리어 버튼 클릭 이벤트
@@ -312,10 +306,7 @@ namespace VisionProTest
             (screenArrayH, screenArrayW) = await _FormDisplay.WaitForUserInput();
             _FormDisplay.Dispose();
 
-            if (screenArrayH * screenArrayW == 1)
-                isExpansion = false;
-            else
-                isExpansion = true;
+            isExpansion = screenArrayH * screenArrayW != 1;
 
             await Task.Run(() => ArrangeScreen(screenArrayW, screenArrayH));
 

@@ -18,6 +18,8 @@ namespace VisionProTest
 
         public const string Acquire = "Acquire";
         public const string Live = "Live";
+        public const string strPMAlign = "PMAlign";
+        public const string strCaliper = "Caliper";
 
         static UcDefine()
         {

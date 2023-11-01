@@ -1,5 +1,4 @@
-﻿using Cognex.VisionPro;
-using Cognex.VisionPro.Display;
+﻿using Cognex.VisionPro.Display;
 
 using ImageFileManager;
 using INIFileManager;
@@ -8,7 +7,6 @@ using Cameras;
 using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace VisionProTest
 {
@@ -17,9 +15,9 @@ namespace VisionProTest
         private FormToolPattern _FormToolPattern;
         private FormToolCaliper _FormToolCaliper;
 
+        public static int selectedIndex;
         public static string strSelectedName;
         private string toolName;
-        private static int selectedIndex;
 
         private readonly string folderPath = Application.StartupPath + "\\CONFIG\\ModelList";
         private readonly string listPath = Application.StartupPath + "\\CONFIG\\List.ini";
@@ -224,9 +222,6 @@ namespace VisionProTest
             cogDisplaySetup.InteractiveGraphics.Clear();
 
             txtSelectName.Text = strSelectedName;
-
-            ToolLoadManager.ModelName = strSelectedName;
-            ToolSaveManager.ModelName = strSelectedName;
         }
 
         private void BtnPMAlignToolLoad_Click(object sender, EventArgs e)
@@ -264,7 +259,7 @@ namespace VisionProTest
 
             for (int i = 0; i < count; i++)
             {
-                toolName = INIFiles.ReadValue("PATTERN" + (i + 1), "Name");
+                toolName = INIFiles.ReadValue("PMAlign" + (i + 1), "Name");
 
                 if (!string.IsNullOrEmpty(toolName))
                 {

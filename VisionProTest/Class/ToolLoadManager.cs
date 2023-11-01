@@ -1,7 +1,6 @@
 ﻿using INIFileManager;
 
 using System;
-using System.Windows.Forms;
 
 namespace VisionProTest
 {
@@ -9,26 +8,22 @@ namespace VisionProTest
     {
         private static string toolName;
 
-        public static string INIPath { get; set; } = Application.StartupPath + "\\CONFIG\\ModelList\\";
-        public static string ModelName { get; set; }
-
-
         public static void SetINIPath(int _tool)
         {
             switch (_tool)
             {
                 case UcDefine.PMAlign:
-                    INIFiles.Set_INI_Path($"{INIPath}\\{ModelName}\\PMAlign.ini");
-                    toolName = "PATTERN";
+                    INIFiles.Set_INI_Path($"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\PMAlign.ini");
+                    toolName = "PMAlign";
                     break;
                 case UcDefine.Caliper:
-                    INIFiles.Set_INI_Path($"{INIPath}\\{ModelName}\\Caliper.ini");
-                    toolName = "CALIPER";
+                    INIFiles.Set_INI_Path($"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\Caliper.ini");
+                    toolName = "Caliper";
                     break;
             }
         }
 
-        public static void GetSearchRegion(int _tool, int _index)
+        public static void LoadSearchRegion(int _tool, int _index)
         {
             switch (_tool)
             {
@@ -49,7 +44,7 @@ namespace VisionProTest
             }
         }
 
-        public static void GetTrainRegion(int _index)
+        public static void LoadTrainRegion(int _index)
         {
             ToolPattern.TrainRegion_Rect.CenterX = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "CenterX"));
             ToolPattern.TrainRegion_Rect.CenterY = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "CenterY"));
@@ -58,55 +53,52 @@ namespace VisionProTest
             ToolPattern.TrainRegion_Rect.Rotation = Convert.ToDouble(INIFiles.ReadValue($"TRAIN_REGION_RECTANGLE{_index + 1}", "Rotation"));
         }
 
-        public static string GetThreshold(int _index)
+        public static string LoadThreshold(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "Threshold", "0.5");
         }
 
-        public static string GetAngleLow(int _index)
+        public static string LoadAngleLow(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "AngleLow", "0");
         }
 
-        public static string GetAngleHigh(int _index)
+        public static string LoadAngleHigh(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "AngleHigh", "0");
         }
 
-        public static string GetScaleLow(int _index)
+        public static string LoadScaleLow(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "ScaleLow", "1");
         }
 
-        public static string GetScaleHigh(int _index)
+        public static string LoadScaleHigh(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "ScaleHigh", "1");
         }
 
-        public static string GetApprox(int _index)
+        public static string LoadApprox(int _index)
         {
             return INIFiles.GetParam($"{toolName}{_index + 1}", "Approx", "1");
         }
 
-        public static bool GetIsHighSensitivity(int _index)
+        public static bool LoadIsHighSensitivity(int _index)
         {
             return Convert.ToBoolean(INIFiles.GetParam($"{toolName}{_index + 1}", "HighSensitivity", "False"));
         }
 
-        public static string GetModelToolName(int _index)
+        public static string LoadModelToolName(int _index)
         {
             return INIFiles.ReadValue($"{toolName}{_index + 1}", "Name");
         }
 
-        public static bool GetMode(int _index)
+        public static bool LoadMode(int _index)
         {
-            if (INIFiles.ReadValue($"MODE{_index + 1}", "Type") == "Single")
-                return false;
-            else
-                return true;
+            return INIFiles.ReadValue($"MODE{_index + 1}", "Type") != "Single";
         }
 
-        public static int GetEdge1Polarity(int _index)
+        public static int LoadEdge1Polarity(int _index)
         {
             switch (INIFiles.ReadValue($"Edge1_{_index + 1}", "Polarity"))
             {
@@ -119,7 +111,7 @@ namespace VisionProTest
             }
         }
 
-        public static int GetEdge2Polarity(int _index)
+        public static int LoadEdge2Polarity(int _index)
         {
             switch (INIFiles.ReadValue($"Edge2_{_index + 1}", "Polarity"))
             {
@@ -132,14 +124,14 @@ namespace VisionProTest
             }
         }
 
-        public static string GetFilterSize(int _index)
+        public static string LoadFilterSize(int _index)
         {
-            return INIFiles.ReadValue($"CALIPER{_index + 1}", "FilterSize");
+            return INIFiles.GetParam($"Caliper{_index + 1}", "FilterSize", "2");
         }
 
-        public static string GetEdgePairWidth(int _index)
+        public static string LoadEdgePairWidth(int _index)
         {
-            return INIFiles.ReadValue($"CALIPER{_index + 1}", "Edge Pair Width");
+            return INIFiles.ReadValue($"Caliper{_index + 1}", "Edge Pair Width");
         }
     }
 }

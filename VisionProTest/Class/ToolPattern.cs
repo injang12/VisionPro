@@ -156,7 +156,9 @@ namespace VisionProTest
                 PMAlignTool.InputImage.SelectedSpaceName = "#";
             }
             else
+            {
                 PMAlignTool.InputImage = SetupDisplay.Image;
+            }
 
             PMAlignTool.RunParams.ZoneAngle.Configuration = CogPMAlignZoneConstants.LowHigh;
             PMAlignTool.RunParams.AcceptThreshold = Convert.ToDouble(Threshold);

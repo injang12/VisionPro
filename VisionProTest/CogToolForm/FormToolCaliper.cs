@@ -15,15 +15,15 @@ namespace VisionProTest
         public void LoadParam(int _index)
         {
             ToolLoadManager.SetINIPath(UcDefine.Caliper);
-            ToolLoadManager.GetSearchRegion(UcDefine.Caliper, _index);
+            ToolLoadManager.LoadSearchRegion(UcDefine.Caliper, _index);
 
-            DoubleEdged.Checked = ToolLoadManager.GetMode(_index);
-            comboPolarity.SelectedIndex = ToolLoadManager.GetEdge1Polarity(_index);
-            comboPolarity2.SelectedIndex = ToolLoadManager.GetEdge2Polarity(_index);
-            txtThreshold.Text = ToolLoadManager.GetThreshold(_index);
-            txtFilterSize.Text = ToolLoadManager.GetFilterSize(_index);
-            txtEdgePairWidth.Text = ToolLoadManager.GetEdgePairWidth(_index);
-            ModelToolName.Text = ToolLoadManager.GetModelToolName(_index);
+            DoubleEdged.Checked = ToolLoadManager.LoadMode(_index);
+            comboPolarity.SelectedIndex = ToolLoadManager.LoadEdge1Polarity(_index);
+            comboPolarity2.SelectedIndex = ToolLoadManager.LoadEdge2Polarity(_index);
+            txtThreshold.Text = ToolLoadManager.LoadThreshold(_index);
+            txtFilterSize.Text = ToolLoadManager.LoadFilterSize(_index);
+            txtEdgePairWidth.Text = ToolLoadManager.LoadEdgePairWidth(_index);
+            ModelToolName.Text = ToolLoadManager.LoadModelToolName(_index);
 
             Caliper_Param();
         }
@@ -31,17 +31,17 @@ namespace VisionProTest
         public static void Caliper_Param(int _index)
         {
             ToolLoadManager.SetINIPath(UcDefine.Caliper);
-            ToolLoadManager.GetSearchRegion(UcDefine.Caliper, _index);
+            ToolLoadManager.LoadSearchRegion(UcDefine.Caliper, _index);
 
-            ToolCaliper.DoubleEdge = ToolLoadManager.GetMode(_index);
-            ToolCaliper.Polarity = ToolLoadManager.GetEdge1Polarity(_index);
-            ToolCaliper.Threshold = Convert.ToDouble(ToolLoadManager.GetThreshold(_index));
-            ToolCaliper.FilterSize = Convert.ToDouble(ToolLoadManager.GetFilterSize(_index));
+            ToolCaliper.DoubleEdge = ToolLoadManager.LoadMode(_index);
+            ToolCaliper.Polarity = ToolLoadManager.LoadEdge1Polarity(_index);
+            ToolCaliper.Threshold = Convert.ToDouble(ToolLoadManager.LoadThreshold(_index));
+            ToolCaliper.FilterSize = Convert.ToDouble(ToolLoadManager.LoadFilterSize(_index));
 
             if (ToolCaliper.DoubleEdge)
             {
-                ToolCaliper.Polarity2 = ToolLoadManager.GetEdge2Polarity(_index);
-                ToolCaliper.EdgePairWidth = Convert.ToInt16(ToolLoadManager.GetEdgePairWidth(_index));
+                ToolCaliper.Polarity2 = ToolLoadManager.LoadEdge2Polarity(_index);
+                ToolCaliper.EdgePairWidth = Convert.ToInt16(ToolLoadManager.LoadEdgePairWidth(_index));
             }
         }
 

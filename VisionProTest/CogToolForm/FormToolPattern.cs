@@ -2,6 +2,7 @@
 using Cognex.VisionPro.Display;
 
 using ImageFileManager;
+using INIFileManager;
 
 using System;
 using System.IO;
@@ -13,6 +14,11 @@ namespace VisionProTest
     {
         public static CogDisplay TrainDisplay = new CogDisplay();
 
+        private static int total = 0;
+        private static int index = 0;
+        private int value = 0;
+        private static bool isOverlap = false;
+
         public FormToolPattern()
         {
             InitializeComponent();
@@ -22,17 +28,17 @@ namespace VisionProTest
         public void LoadParam(int _index)
         {
             ToolLoadManager.SetINIPath(UcDefine.PMAlign);
-            ToolLoadManager.GetSearchRegion(UcDefine.PMAlign, _index);
-            ToolLoadManager.GetTrainRegion(_index);
+            ToolLoadManager.LoadSearchRegion(UcDefine.PMAlign, _index);
+            ToolLoadManager.LoadTrainRegion(_index);
 
-            txtThreshold.Text = ToolLoadManager.GetThreshold(_index);
-            txtAngleLow.Text = ToolLoadManager.GetAngleLow(_index);
-            txtAngleHigh.Text = ToolLoadManager.GetAngleHigh(_index);
-            txtScaleLow.Text = ToolLoadManager.GetScaleLow(_index);
-            txtScaleHigh.Text = ToolLoadManager.GetScaleHigh(_index);
-            txtApprox.Text = ToolLoadManager.GetApprox(_index);
-            chkHighSensitivity.Checked = ToolLoadManager.GetIsHighSensitivity(_index);
-            ModelToolName.Text = ToolLoadManager.GetModelToolName(_index);
+            txtThreshold.Text = ToolLoadManager.LoadThreshold(_index);
+            txtAngleLow.Text = ToolLoadManager.LoadAngleLow(_index);
+            txtAngleHigh.Text = ToolLoadManager.LoadAngleHigh(_index);
+            txtScaleLow.Text = ToolLoadManager.LoadScaleLow(_index);
+            txtScaleHigh.Text = ToolLoadManager.LoadScaleHigh(_index);
+            txtApprox.Text = ToolLoadManager.LoadApprox(_index);
+            chkHighSensitivity.Checked = ToolLoadManager.LoadIsHighSensitivity(_index);
+            ModelToolName.Text = ToolLoadManager.LoadModelToolName(_index);
 
             Pattern_Param();
 
@@ -46,15 +52,15 @@ namespace VisionProTest
         public static void Pattern_Param(int _index)
         {
             ToolLoadManager.SetINIPath(UcDefine.PMAlign);
-            ToolLoadManager.GetSearchRegion(UcDefine.PMAlign, _index);
-            ToolLoadManager.GetTrainRegion(_index);
+            ToolLoadManager.LoadSearchRegion(UcDefine.PMAlign, _index);
+            ToolLoadManager.LoadTrainRegion(_index);
 
-            ToolPattern.Threshold = Convert.ToDouble(ToolLoadManager.GetThreshold(_index));
-            ToolPattern.AngleLow = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.GetAngleLow(_index)));
-            ToolPattern.AngleHigh = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.GetAngleHigh(_index)));
-            ToolPattern.ScaleLow = Convert.ToDouble(ToolLoadManager.GetScaleLow(_index));
-            ToolPattern.ScaleHigh = Convert.ToDouble(ToolLoadManager.GetScaleHigh(_index));
-            ToolPattern.Approx = Convert.ToInt16(ToolLoadManager.GetApprox(_index));
+            ToolPattern.Threshold = Convert.ToDouble(ToolLoadManager.LoadThreshold(_index));
+            ToolPattern.AngleLow = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.LoadAngleLow(_index)));
+            ToolPattern.AngleHigh = CogMisc.DegToRad(Convert.ToDouble(ToolLoadManager.LoadAngleHigh(_index)));
+            ToolPattern.ScaleLow = Convert.ToDouble(ToolLoadManager.LoadScaleLow(_index));
+            ToolPattern.ScaleHigh = Convert.ToDouble(ToolLoadManager.LoadScaleHigh(_index));
+            ToolPattern.Approx = Convert.ToInt16(ToolLoadManager.LoadApprox(_index));
         }
 
         private void Pattern_Param()
@@ -65,6 +71,41 @@ namespace VisionProTest
             ToolPattern.ScaleLow = Convert.ToDouble(txtScaleLow.Text);
             ToolPattern.ScaleHigh = Convert.ToDouble(txtScaleHigh.Text);
             ToolPattern.Approx = Convert.ToInt16(txtApprox.Text);
+        }
+
+        private static void FileExistsAndCreate(string toolName, string modelToolName)
+        {
+            string ModelPath = $"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\";
+
+            if (!Directory.Exists(ModelPath))
+                Directory.CreateDirectory(ModelPath);
+
+            ModelPath += toolName + ".ini";
+
+            if (!File.Exists(ModelPath))
+            {
+                using (FileStream fs = File.Create(ModelPath))
+                {
+                }
+                INIFiles.Set_INI_Path(ModelPath);
+
+                INIFiles.WriteValue("COMMON", "Total", "0");
+            }
+            else
+            {
+                INIFiles.Set_INI_Path(ModelPath);
+                total = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
+            }
+
+            for (int i = 0; i < total; i++)
+            {
+                if (INIFiles.ReadValue($"{toolName}{(i + 1)}", "Name") == modelToolName)
+                {
+                    isOverlap = true;
+                    index = i + 1;
+                    break;
+                }
+            }
         }
 
         private void BtnTrainRegion_Click(object sender, EventArgs e)    // TrainRegion 버튼 클릭 이벤트
@@ -129,17 +170,47 @@ namespace VisionProTest
             if (MessageBox.Show("저장하시겠습니까?", "확인", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 return;
 
-            ToolSaveManager.SearchRegion_Rect = ToolPattern.SearchRegion_Rect;
-            ToolSaveManager.TrainRegion_Rect = ToolPattern.TrainRegion_Rect;
-            ToolSaveManager.Threshold = txtThreshold.Text;
-            ToolSaveManager.AngleLow = txtAngleLow.Text;
-            ToolSaveManager.AngleHigh = txtAngleHigh.Text;
-            ToolSaveManager.ScaleLow = txtScaleLow.Text;
-            ToolSaveManager.ScaleHigh = txtScaleHigh.Text;
-            ToolSaveManager.Approx = txtApprox.Text;
-            ToolSaveManager.IsHighSensitivity = Convert.ToString(chkHighSensitivity.Checked);
-            ToolSaveManager.SaveParam(ModelToolName.Text, UcDefine.PMAlign);
-            ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", "PMAlign", ModelToolName.Text);
+            FileExistsAndCreate(UcDefine.strPMAlign, ModelToolName.Text);
+
+            if (!isOverlap)
+            {
+                if (MessageBox.Show("패턴을 새로 추가 하시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    total++;
+                    INIFiles.WriteValue("COMMON", "Total", Convert.ToString(total));
+                    value = total;
+
+                    ToolSaveManager.SaveTrainRegion(ToolPattern.TrainRegion_Rect, value);
+                    ToolSaveManager.SaveSearchRegion(ToolPattern.SearchRegion_Rect, value);
+                    ToolSaveManager.SaveToolName(ModelToolName.Text, value);
+                    ToolSaveManager.SaveHighSensitivity(Convert.ToString(chkHighSensitivity.Checked), value);
+                    ToolSaveManager.SaveThreshold(UcDefine.strPMAlign, txtThreshold.Text, value);
+                    ToolSaveManager.SaveAngleLow(txtAngleLow.Text, value);
+                    ToolSaveManager.SaveAngleHigh(txtAngleHigh.Text, value);
+                    ToolSaveManager.SaveScaleLow(txtScaleLow.Text, value);
+                    ToolSaveManager.SaveScaleHigh(txtScaleHigh.Text, value);
+                    ToolSaveManager.SaveApprox(txtApprox.Text, value);
+                    ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", UcDefine.strPMAlign, ModelToolName.Text);
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("기존 패턴과 이름이 같습니다 덮어쓰시겠습니까?", "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    value = index;
+
+                    ToolSaveManager.SaveTrainRegion(ToolPattern.TrainRegion_Rect, value);
+                    ToolSaveManager.SaveSearchRegion(ToolPattern.SearchRegion_Rect, value);
+                    ToolSaveManager.SaveToolName(ModelToolName.Text, value);
+                    ToolSaveManager.SaveHighSensitivity(Convert.ToString(chkHighSensitivity.Checked), value);
+                    ToolSaveManager.SaveThreshold(UcDefine.strPMAlign, txtThreshold.Text, value);
+                    ToolSaveManager.SaveAngleLow(txtAngleLow.Text, value);
+                    ToolSaveManager.SaveAngleHigh(txtAngleHigh.Text, value);
+                    ToolSaveManager.SaveScaleLow(txtScaleLow.Text, value);
+                    ToolSaveManager.SaveScaleHigh(txtScaleHigh.Text, value);
+                    ToolSaveManager.SaveApprox(txtApprox.Text, value);
+                }
+            }
         }
     }
 }

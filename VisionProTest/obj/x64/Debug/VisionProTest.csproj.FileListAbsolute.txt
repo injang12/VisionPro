@@ -35,7 +35,6 @@ C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\Vi
 C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\VisionProTest\bin\Debug\Cognex.VisionPro3D.xml
 C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\VisionProTest\bin\Debug\Cognex.VisionPro.ToolGroup.xml
 C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\VisionProTest\obj\x64\Debug\VisionProTest.csproj.AssemblyReference.cache
-C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\VisionProTest\obj\x64\Debug\VisionProTest.csproj.SuggestedBindingRedirects.cache
 C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\VisionProTest\obj\x64\Debug\VisionProTest.FormToolCaliper.resources
 C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\VisionProTest\obj\x64\Debug\VisionProTest.FormImageMasking.resources
 C:\Users\MINGYU\Desktop\신입사원 VisionPro 커리큘럼\VisionProTest (2)\VisionProTest\obj\x64\Debug\VisionProTest.FormToolPattern.resources
