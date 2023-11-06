@@ -68,7 +68,7 @@ namespace VisionProTest
 
         private static void FileExistsAndCreate(string toolName, string modelToolName)
         {
-            string ModelPath = $"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\";
+            string ModelPath = $"{UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName}\\";
 
             if (!Directory.Exists(ModelPath))
                 Directory.CreateDirectory(ModelPath);
@@ -143,8 +143,8 @@ namespace VisionProTest
                 txtFilterSize.Text = "99999";
 
             Caliper_Param();
-
-            ToolCaliper.Find_Run(ToolCaliper.SetupDisplay);
+            ToolCaliper.MainDisplay_Clear();
+            ToolCaliper.Find_Run();
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -168,7 +168,7 @@ namespace VisionProTest
                     INIFiles.WriteValue("COMMON", "Total", Convert.ToString(total));
 
                     SaveCaliperParam(total);
-                    ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", UcDefine.strCaliper, ModelToolName.Text);
+                    ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName + "\\", UcDefine.strCaliper, ModelToolName.Text);
                 }
                 else
                     return;
@@ -181,7 +181,7 @@ namespace VisionProTest
                     return;
             }
 
-            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolCaliper.SetupDisplay.Image);
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolCaliper.SetupDisplay.Image);
         }
 
         private void DoubleEdged_CheckedChanged(object sender, EventArgs e)

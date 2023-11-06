@@ -20,7 +20,7 @@ namespace VisionProTest
 
         public static CogImage8Grey Load_MaskImage(string _name)
         {
-            string path = $"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\";
+            string path = $"{UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName}\\";
             if (!File.Exists(path + $"\\Mask_{_name}.bmp"))
                 return null;
 

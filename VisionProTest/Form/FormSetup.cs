@@ -1,12 +1,11 @@
-﻿using Cognex.VisionPro.Display;
-
-using ImageFileManager;
+﻿using ImageFileManager;
 using INIFileManager;
 using Cameras;
 
 using System;
 using System.IO;
 using System.Windows.Forms;
+using Cognex.VisionPro;
 
 namespace VisionProTest
 {
@@ -19,9 +18,6 @@ namespace VisionProTest
         public static string strSelectedName;
         private string toolName;
 
-        private readonly string folderPath = Application.StartupPath + "\\CONFIG\\ModelList";
-        private readonly string listPath = Application.StartupPath + "\\CONFIG\\List.ini";
-
         public FormSetup()
         {
             InitializeComponent();
@@ -32,14 +28,14 @@ namespace VisionProTest
             CenterToScreen();
             Show();
 
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
+            if (!Directory.Exists(UcDefine.ModelListPath))
+                Directory.CreateDirectory(UcDefine.ModelListPath);
 
-            INIFiles.Set_INI_Path(listPath);
+            INIFiles.Set_INI_Path(UcDefine.ListINIPath);
 
-            if (!File.Exists(listPath))
+            if (!File.Exists(UcDefine.ListINIPath))
             {
-                using (File.Create(listPath))
+                using (File.Create(UcDefine.ListINIPath))
                 {
                 }
                 INIFiles.WriteValue("COMMON", "Total", "0");
@@ -63,7 +59,7 @@ namespace VisionProTest
             }
         }
 
-        public string SelectModel()
+        public static string SelectModel()
         {
             return strSelectedName;
         }
@@ -78,12 +74,13 @@ namespace VisionProTest
             }
         }
 
-        public void SelectToolRun(CogDisplay display)
+        public static void SelectToolRun(CogRecordDisplay display)
         {
             display.StaticGraphics.Clear();
 
-            string path = folderPath + $"\\{strSelectedName}\\";
+            string path = UcDefine.ModelListPath + $"\\{strSelectedName}\\";
             string iniPath = path + "ToolParam.ini";
+            string ImagePath = path + "MasterImage.bmp";
 
             if (!File.Exists(iniPath))
                 return;
@@ -96,7 +93,7 @@ namespace VisionProTest
             for (int i = 0; i < count; i++)
             {
                 INIFiles.Set_INI_Path(iniPath);
-
+                
                 string tool = INIFiles.ReadValue($"{i + 1}", "Tool");
                 string name = INIFiles.ReadValue($"{i + 1}", "Name");
                 int total;
@@ -107,13 +104,16 @@ namespace VisionProTest
                         INIFiles.Set_INI_Path(path + "PMAlign.ini");
                         total = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
 
+                        ToolPattern.InputImage = ImageManager.Load_ImageFile(ImagePath);
+
                         for (int j = 0; j < total; j++)
                         {
-                            if (name == INIFiles.ReadValue($"PATTERN{j + 1}", "Name"))
+                            if (name == INIFiles.ReadValue($"{UcDefine.strPMAlign}{j + 1}", "Name"))
                             {
                                 FormToolPattern.Pattern_Param(j);
-                                ToolPattern.Train_Pattern(Convert.ToBoolean(INIFiles.ReadValue($"PATTERN{j + 1}", "HighSensitivity")));
-                                isRun = ToolPattern.Find_Run();
+                                ToolPattern.Train_Pattern(Convert.ToBoolean(INIFiles.ReadValue($"{UcDefine.strPMAlign}{j + 1}", "HighSensitivity")));
+
+                                isRun = ToolPattern.Find_Run(display);
                                 break;
                             }
                         }
@@ -121,6 +121,8 @@ namespace VisionProTest
                     case "Caliper":
                         INIFiles.Set_INI_Path(path + "Caliper.ini");
                         total = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
+
+                        ToolCaliper.InputImage = ImageManager.Load_ImageFile(ImagePath);
 
                         for (int j = 0; j < total; j++)
                         {
@@ -140,24 +142,24 @@ namespace VisionProTest
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtName.Text))
-                return;
+            if (!string.IsNullOrEmpty(txtName.Text))
+            {
+                INIFiles.Set_INI_Path(UcDefine.ListINIPath);
 
-            INIFiles.Set_INI_Path(listPath);
+                int count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
 
-            int count = Convert.ToInt16(INIFiles.ReadValue("COMMON", "Total"));
+                INIFiles.WriteValue("COMMON", "Total", $"{count + 1}");
+                INIFiles.WriteValue("Folder" + $"{count}", "Name", txtName.Text);
 
-            INIFiles.WriteValue("COMMON", "Total", $"{count + 1}");
-            INIFiles.WriteValue("Folder" + $"{count}", "Name", txtName.Text);
+                Directory.CreateDirectory(UcDefine.ModelListPath + $"\\{txtName.Text}");
 
-            Directory.CreateDirectory(folderPath + $"\\{txtName.Text}");
+                string[] arrData = new string[2];
 
-            string[] arrData = new string[2];
+                arrData[0] = (FolderList.Items.Count + 1).ToString();
+                arrData[1] = txtName.Text;
 
-            arrData[0] = (FolderList.Items.Count + 1).ToString();
-            arrData[1] = txtName.Text;
-
-            FolderList.Items.Add(new ListViewItem(arrData));
+                FolderList.Items.Add(new ListViewItem(arrData));
+            }
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
@@ -166,7 +168,7 @@ namespace VisionProTest
                 return;
 
             string strName = FolderList.SelectedItems[0].SubItems[1].Text;
-            string strPath = folderPath + $"\\{strName}";
+            string strPath = UcDefine.ModelListPath + $"\\{strName}";
 
             if (strName == txtSelectName.Text)
             {
@@ -190,7 +192,7 @@ namespace VisionProTest
                 FolderList.Items[i].SubItems[0].Text = (i + 1).ToString();
             }
 
-            INIFiles.Set_INI_Path(listPath);
+            INIFiles.Set_INI_Path(UcDefine.ListINIPath);
 
             INIFiles.WriteValue("COMMON", "Total", FolderList.Items.Count.ToString());
 
@@ -244,7 +246,7 @@ namespace VisionProTest
             _FormToolPattern.Show();
 
             ModelToolList.Items.Clear();
-            string iniPath = folderPath + $"\\{strSelectedName}\\PMAlign.ini";
+            string iniPath = UcDefine.ModelListPath + $"\\{strSelectedName}\\PMAlign.ini";
 
             INIFiles.Set_INI_Path(iniPath);
 
@@ -288,7 +290,7 @@ namespace VisionProTest
             _FormToolCaliper.Show();
 
             ModelToolList.Items.Clear();
-            string iniPath = folderPath + $"\\{strSelectedName}\\Caliper.ini";
+            string iniPath = UcDefine.ModelListPath + $"\\{strSelectedName}\\Caliper.ini";
 
             INIFiles.Set_INI_Path(iniPath);
 
@@ -353,7 +355,7 @@ namespace VisionProTest
             cogDisplaySetup.StaticGraphics.Clear();
             cogDisplaySetup.InteractiveGraphics.Clear();
 
-            string imgPath = folderPath + $"\\{strSelectedName}\\MasterImage.bmp";
+            string imgPath = UcDefine.ModelListPath + $"\\{strSelectedName}\\MasterImage.bmp";
             selectedIndex = -1;
             if (ModelToolList.SelectedItems.Count > 0)
             {
@@ -376,7 +378,7 @@ namespace VisionProTest
                     _FormToolPattern.LoadParam(Convert.ToInt16(selectedIndex));
                 else if (txtToolName.Text == UcDefine.strCaliper)
                 {
-                    if (File.Exists(UcDefine.ModelListPath + strSelectedName + "\\Caliper.ini"))
+                    if (File.Exists(UcDefine.ModelListPath + "\\" + strSelectedName + "\\Caliper.ini"))
                     {
                         _FormToolCaliper.LoadParam(Convert.ToInt16(selectedIndex));
                     }
@@ -395,7 +397,7 @@ namespace VisionProTest
                 return;
 
             string strToolName = txtToolName.Text;
-            string strPath = folderPath + $"\\{txtSelectName.Text}";
+            string strPath = UcDefine.ModelListPath + $"\\{txtSelectName.Text}";
 
             INIFiles.Set_INI_Path(strPath + $"\\{strToolName}.ini");
 

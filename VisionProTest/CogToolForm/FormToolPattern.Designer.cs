@@ -52,7 +52,6 @@
             this.txtApprox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.ModelToolName = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cogDisplay_Pattern)).BeginInit();
             this.SuspendLayout();
             // 
@@ -306,22 +305,11 @@
             this.ModelToolName.Size = new System.Drawing.Size(100, 21);
             this.ModelToolName.TabIndex = 93;
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
-            this.label7.Location = new System.Drawing.Point(451, 9);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(40, 14);
-            this.label7.TabIndex = 94;
-            this.label7.Text = "Name";
-            // 
             // FormToolPattern
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(600, 350);
             this.ControlBox = false;
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.ModelToolName);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtApprox);
@@ -380,6 +368,5 @@
         private System.Windows.Forms.TextBox txtApprox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox ModelToolName;
-        private System.Windows.Forms.Label label7;
     }
 }

@@ -15,6 +15,7 @@ namespace VisionProTest
         public const int OCRMax = 2;
 
         public static string ModelListPath;
+        public static string ListINIPath;
 
         public const string Acquire = "Acquire";
         public const string Live = "Live";
@@ -23,7 +24,8 @@ namespace VisionProTest
 
         static UcDefine()
         {
-            ModelListPath = Path.Combine(Application.StartupPath, "CONFIG\\ModelList\\");
+            ModelListPath = Path.Combine(Application.StartupPath, "CONFIG\\ModelList");
+            ListINIPath = Path.Combine(Application.StartupPath, "CONFIG\\List.ini");
         }
     }
 }

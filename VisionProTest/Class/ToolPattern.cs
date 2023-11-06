@@ -24,7 +24,7 @@ namespace VisionProTest
         public static double ScaleHigh { get; set; }
         public static double Approx { get; set; }
 
-        private static void MainDisplay_Clear()
+        public static void MainDisplay_Clear()
         {
             SetupDisplay.InteractiveGraphics.Clear();
             SetupDisplay.StaticGraphics.Clear();
@@ -54,7 +54,7 @@ namespace VisionProTest
         {
             if (InputImage == null)
                 return false;
-
+               
             switch (InputImage.ToString())
             {
                 case "Cognex.VisionPro.CogImage16Range":
@@ -113,7 +113,7 @@ namespace VisionProTest
                 _display.StaticGraphics.AddList(PMAlignTool.Pattern.CreateGraphicsCoarse(CogColorConstants.Yellow), null);
                 _display.StaticGraphics.AddList(PMAlignTool.Pattern.CreateGraphicsFine(CogColorConstants.Green), null);
             }
-
+            
             return PMAlignTool.Pattern.Trained;
         }
 
@@ -133,9 +133,10 @@ namespace VisionProTest
             SetupDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
         }
 
-        public static bool Find_Run()
+        public static bool Find_Run(CogRecordDisplay display = null)
         {
-            MainDisplay_Clear();
+            if (display != null)
+                SetupDisplay = display;
 
             if (!PMAlignTool.Pattern.Trained || SetupDisplay.Image == null)
                 return false;
@@ -145,7 +146,7 @@ namespace VisionProTest
                 X = 0,
                 Y = 0
             };
-            
+
             if (SetupDisplay.Image.ToString() == "Cognex.VisionPro.CogImage16Range")
             {
                 PMAlignTool.InputImage = PixelMapTool.OutputImage;

@@ -165,7 +165,7 @@
             this.PnlMouse.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.PnlMouse.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 407F));
             this.PnlMouse.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
-            this.PnlMouse.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.PnlMouse.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 152F));
             this.PnlMouse.Controls.Add(this.BtnDisplay, 5, 0);
             this.PnlMouse.Controls.Add(this.btnExit, 10, 0);
             this.PnlMouse.Controls.Add(this.btnDisplayClear, 9, 0);

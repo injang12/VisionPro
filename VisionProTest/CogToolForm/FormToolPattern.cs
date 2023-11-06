@@ -41,7 +41,7 @@ namespace VisionProTest
 
             Pattern_Param();
 
-            if (File.Exists(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp"))
+            if (File.Exists(UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName + "\\MasterImage.bmp"))
             {
                 ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
                 ToolPattern.Train_Pattern(chkHighSensitivity.Checked, TrainDisplay);
@@ -74,7 +74,7 @@ namespace VisionProTest
 
         private static void FileExistsAndCreate(string toolName, string modelToolName)
         {
-            string ModelPath = $"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\";
+            string ModelPath = $"{UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName}\\";
 
             if (!Directory.Exists(ModelPath))
                 Directory.CreateDirectory(ModelPath);
@@ -145,7 +145,7 @@ namespace VisionProTest
             if (FormImageMasking.ImageMasking(ToolPattern.SetupDisplay.Image, ModelToolName.Text))
             {
                 ToolPattern.Masking(FormImageMasking.Load_MaskImage(ModelToolName.Text));
-                ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + $"\\Mask_{ModelToolName.Text}.bmp", (CogImage8Grey)FormImageMasking.MaskingImage);
+                ImageManager.Save_ImageFile(UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName + $"\\Mask_{ModelToolName.Text}.bmp", (CogImage8Grey)FormImageMasking.MaskingImage);
             }
         }
 
@@ -168,6 +168,7 @@ namespace VisionProTest
         private void BtnFind_Click(object sender, EventArgs e)
         {
             Pattern_Param();
+            ToolPattern.MainDisplay_Clear();
             ToolPattern.Find_Run();
         }
 
@@ -192,7 +193,7 @@ namespace VisionProTest
                     INIFiles.WriteValue("COMMON", "Total", Convert.ToString(total));
 
                     SavePMAlignParam(total);
-                    ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\", UcDefine.strPMAlign, ModelToolName.Text);
+                    ToolSaveManager.ToolParamSave(UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName + "\\", UcDefine.strPMAlign, ModelToolName.Text);
                 }
                 else
                     return;
@@ -204,7 +205,7 @@ namespace VisionProTest
                 else
                     return;
             }
-            ImageManager.Save_ImageFile(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolPattern.SetupDisplay.Image);
+            ImageManager.Save_ImageFile(UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName + "\\MasterImage.bmp", ToolPattern.SetupDisplay.Image);
         }
     }
 }

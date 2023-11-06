@@ -357,7 +357,7 @@
             this.BtnToolDelete.Name = "BtnToolDelete";
             this.BtnToolDelete.Size = new System.Drawing.Size(150, 59);
             this.BtnToolDelete.TabIndex = 177;
-            this.BtnToolDelete.Text = "Delete";
+            this.BtnToolDelete.Text = "삭제";
             this.BtnToolDelete.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.BtnToolDelete.UseVisualStyleBackColor = true;
             this.BtnToolDelete.Click += new System.EventHandler(this.BtnToolDelete_Click);

@@ -4,50 +4,50 @@
         <name>SplashThread</name>
     </assembly>
     <members>
-        <member name="T:SplashThread.SplashThread">
+        <member name="T:SplashThreadManager.SplashThread">
             <summary>
             스플래쉬 스레드 클래스
             </summary>
         </member>
-        <member name="M:SplashThread.SplashThread.Open">
+        <member name="M:SplashThreadManager.SplashThread.Open">
             <summary>
             스레드 시작
             </summary>
         </member>
-        <member name="M:SplashThread.SplashThread.Close">
+        <member name="M:SplashThreadManager.SplashThread.Close">
             <summary>
             폼을 닫습니다
             </summary>
         </member>
-        <member name="M:SplashThread.SplashThread.Join">
+        <member name="M:SplashThreadManager.SplashThread.Join">
             <summary>
             이 인스턴스가 나타내는 스레드가 종료될 때까지 호출 스레드를 차단
             </summary>
         </member>
-        <member name="M:SplashThread.SplashThread.UpdateProgressBar(System.Int32)">
+        <member name="M:SplashThreadManager.SplashThread.UpdateProgressBar(System.Int32)">
             <summary>
             로딩 진행 바
             </summary>
             <param name="value">매개변수에 들어온 값에 따라 진행</param>
         </member>
-        <member name="M:SplashThread.SplashThread.SetStatus(System.String)">
+        <member name="M:SplashThreadManager.SplashThread.SetStatus(System.String)">
             <summary>
             현재 진행 상태 표시
             </summary>
             <param name="str">문자열로 로딩바 메세지 출력</param>
         </member>
-        <member name="F:SplashThread.FormSplash.components">
+        <member name="F:SplashThreadManager.FormSplash.components">
             <summary>
             Required designer variable.
             </summary>
         </member>
-        <member name="M:SplashThread.FormSplash.Dispose(System.Boolean)">
+        <member name="M:SplashThreadManager.FormSplash.Dispose(System.Boolean)">
             <summary>
             Clean up any resources being used.
             </summary>
             <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         </member>
-        <member name="M:SplashThread.FormSplash.InitializeComponent">
+        <member name="M:SplashThreadManager.FormSplash.InitializeComponent">
             <summary>
             Required method for Designer support - do not modify
             the contents of this method with the code editor.

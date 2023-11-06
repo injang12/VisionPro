@@ -13,11 +13,11 @@ namespace VisionProTest
             switch (_tool)
             {
                 case UcDefine.PMAlign:
-                    INIFiles.Set_INI_Path($"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\PMAlign.ini");
+                    INIFiles.Set_INI_Path($"{UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName}\\PMAlign.ini");
                     toolName = "PMAlign";
                     break;
                 case UcDefine.Caliper:
-                    INIFiles.Set_INI_Path($"{UcDefine.ModelListPath + FormSetup.strSelectedName}\\Caliper.ini");
+                    INIFiles.Set_INI_Path($"{UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName}\\Caliper.ini");
                     toolName = "Caliper";
                     break;
             }

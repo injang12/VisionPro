@@ -1,10 +1,10 @@
 ﻿using Cognex.VisionPro;
 using Cognex.VisionPro.Caliper;
-using Cognex.VisionPro.Display;
 
 using System.Drawing;
 using System;
 using System.IO;
+using INIFileManager;
 
 namespace VisionProTest
 {
@@ -39,7 +39,7 @@ namespace VisionProTest
             SetupDisplay.StaticGraphics.Clear();
             SetupDisplay.InteractiveGraphics.Clear();
 
-            if (!File.Exists(UcDefine.ModelListPath + FormSetup.strSelectedName + "\\Caliper.ini"))
+            if (!File.Exists(UcDefine.ModelListPath + "\\" + FormSetup.strSelectedName + "\\Caliper.ini"))
             {
                 SearchRegion_Rect.CenterX = 500;
                 SearchRegion_Rect.CenterY = 500;
@@ -51,14 +51,17 @@ namespace VisionProTest
             SetupDisplay.InteractiveGraphics.Add(SearchRegion_Rect, null, false);
         }
 
-        public static bool Find_Run(CogDisplay display)
+        public static bool Find_Run(CogRecordDisplay display = null)
         {
-            MainDisplay_Clear();
+            if (display != null)
+                SetupDisplay = display;
 
             Polarity++;
 
             CaliperTool.InputImage = InputImage;
             CaliperTool.Region = SearchRegion_Rect;
+
+            
 
             CaliperTool.RunParams.ContrastThreshold = Convert.ToDouble(Threshold);
             CaliperTool.RunParams.FilterHalfSizeInPixels = Convert.ToInt32(FilterSize);
@@ -89,7 +92,7 @@ namespace VisionProTest
                 SearchRegion_Rect.XDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.None;
                 SearchRegion_Rect.YDirectionAdornment = CogRectangleAffineDirectionAdornmentConstants.None;
 
-                display.StaticGraphics.Add(SearchRegion_Rect, "");
+                SetupDisplay.StaticGraphics.Add(SearchRegion_Rect, "");
 
                 CogGraphicLabel ngLabelScore = new CogGraphicLabel
                 {
@@ -100,14 +103,14 @@ namespace VisionProTest
                     Font = new Font("Tahoma", 50.11f)
                 };
 
-                display.StaticGraphics.Add(ngLabelScore, null);
+                SetupDisplay.StaticGraphics.Add(ngLabelScore, null);
                 ngLabelScore.Dispose();
 
                 return false;
             }
 
             CogCompositeShape doubleEdgeGrapic = CaliperTool.Results[0].CreateResultGraphics(CogCaliperResultGraphicConstants.All);
-            display.StaticGraphics.Add(doubleEdgeGrapic, "");
+            SetupDisplay.StaticGraphics.Add(doubleEdgeGrapic, "");
 
             CogGraphicLabel okLabelScore = new CogGraphicLabel
             {
@@ -118,13 +121,13 @@ namespace VisionProTest
                 Font = new Font("Tahoma", 50.11f)
             };
 
-            display.StaticGraphics.Add(okLabelScore, null);
+            SetupDisplay.StaticGraphics.Add(okLabelScore, null);
             okLabelScore.Dispose();
 
             return true;
         }
 
-        private static void MainDisplay_Clear()
+        public static void MainDisplay_Clear()
         {
             SetupDisplay.InteractiveGraphics.Clear();
             SetupDisplay.StaticGraphics.Clear();

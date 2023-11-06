@@ -4,6 +4,7 @@ using INIFileManager;
 using Cameras;
 using DisplaySetting;
 using ImageFileManager;
+using SplashThreadManager;
 
 using System;
 using System.Threading;
@@ -17,15 +18,6 @@ namespace VisionProTest
         private readonly CogRecordDisplay[] mDisplay = new CogRecordDisplay[UcDefine.MAX_CAMERA * UcDefine.MAX_STEP];   // 디스플레이
         private readonly Label[] mLabel = new Label[UcDefine.MAX_CAMERA * UcDefine.MAX_STEP];   // 디스플레이 라벨
 
-        private readonly FormSetup _FormSetup = new FormSetup();
-
-        private readonly DisplayManager DisplayManager = new DisplayManager();
-        private readonly ImageManager ImageManager = new ImageManager();
-        private readonly CameraManager Camera = new CameraManager();
-        private readonly SplashThread.SplashThread splash = new SplashThread.SplashThread();
-
-        private CogRecordDisplay LiveDisplay = new CogRecordDisplay();
-        
         private static ICogAcqFifo mAcqFifo = null;
         private static ICogFrameGrabber mFrameGrabber = null;
 
@@ -45,52 +37,43 @@ namespace VisionProTest
         {
             InitializeComponent();
             FormMain_Load();
+
+            BtnLoadImage.Enabled = true;
+            BtnSaveImage.Enabled = true;
+            BtnSetupLoad.Enabled = true;
+            BtnDisplay.Enabled = true;
         }
 
         private async void FormMain_Load()   // 메인폼 로드
         {
-            splash.Open();
+            SplashThread Splash = new SplashThread();
+
+            Splash.Open();
             
             Hide();
 
-            splash.UpdateProgressBar(10);
-            splash.SetStatus("카메라 연결 중...");
+            Splash.UpdateProgressBar(50);
+            Splash.SetStatus("카메라 연결 중...");
+            CameraTypeComboBox = CameraManager.SetCamera(CameraTypeComboBox, CameraTypeComboBox_SelectedIndexChanged);
 
-            CameraTypeComboBox = Camera.SetCamera(CameraTypeComboBox, CameraTypeComboBox_SelectedIndexChanged);
-            splash.UpdateProgressBar(40);
-            if (CameraTypeComboBox == null)
-                splash.SetStatus("카메라 연결 실패...");
-            else
-                splash.SetStatus("카메라 연결 성공...");
-
-            splash.UpdateProgressBar(60);
-            splash.SetStatus("라이센스 확인 중");
-
-            splash.UpdateProgressBar(80);
-            splash.SetStatus("디스플레이 설정 중...");
+            Splash.UpdateProgressBar(100);
+            Splash.Close();
+            Splash.Join();
 
             FormDisplay _FormDisplay = new FormDisplay();
 
-            await Task.Run(() => _FormDisplay.Display_Load());
+            _FormDisplay.Display_Load();
 
             (screenArrayH, screenArrayW) = await _FormDisplay.WaitForUserInput();
             _FormDisplay.Dispose();
 
             isExpansion = screenArrayH * screenArrayW != 1;
 
-            splash.UpdateProgressBar(100);
-            await Task.Run(() => ArrangeScreen(screenArrayW, screenArrayH));
-
-            splash.Close();
-            splash.Join();
-            
             Show();
             Activate();
             CenterToScreen();
-            BtnLoadImage.Enabled = true;
-            BtnSaveImage.Enabled = true;
-            BtnSetupLoad.Enabled = true;
-            BtnDisplay.Enabled = true;
+
+            await Task.Run(() => ArrangeScreen(screenArrayW, screenArrayH));
         }
 
         private void ArrangeScreen(int screenLayout_W, int screenLayout_H)      // 디스플레이 생성 메서드
@@ -172,11 +155,10 @@ namespace VisionProTest
 
         private void Live_ToolRun()                         // 라이브 and Tool 실행 메서드
         {
-            LiveDisplay = mDisplay[selectStep];
             Print_Log("라이브 시작...");
             while (isLive)
             {
-                CameraManager.AcquireStart(LiveDisplay, (double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value);
+                CameraManager.AcquireStart(mDisplay[selectStep], (double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value);
                 BtnRun.PerformClick();
             }
             Print_Log("라이브 종료");
@@ -202,12 +184,12 @@ namespace VisionProTest
         private void CameraTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)   // 프레임 그래버 콤보박스 선택 이벤트
         {
             mFrameGrabber = new CogFrameGrabbers()[CameraTypeComboBox.SelectedIndex];
-            Camera.SetFormat(mFrameGrabber, VidFormatComboBox, VidFormatComboBox_SelectedIndexChanged);
+            CameraManager.SetFormat(mFrameGrabber, VidFormatComboBox, VidFormatComboBox_SelectedIndexChanged);
         }
 
         private void VidFormatComboBox_SelectedIndexChanged(object sender, EventArgs e)  // 선택한 비디오 포맷으로 FIFO 생성 이벤트
         {
-            mAcqFifo = Camera.SetFifo(mFrameGrabber, VidFormatComboBox);
+            mAcqFifo = CameraManager.SetFifo(mFrameGrabber, VidFormatComboBox);
 
             btnAcquire.Enabled = true;
             btnLive.Enabled = true;
@@ -224,7 +206,7 @@ namespace VisionProTest
             }
 
             StepFix();
-            mDisplay[nextStep] = Camera.HardWare_AcqFifo(mDisplay[nextStep]);
+            mDisplay[nextStep] = CameraManager.HardWare_AcqFifo(mDisplay[nextStep]);
             BtnRun.PerformClick();
             Print_Log(ImageManager.HardwareImageSave(hwNameTxt.Text, hwNameCombo.Text, mDisplay[nextStep].Image));
 
@@ -352,7 +334,7 @@ namespace VisionProTest
 
             if (btnTriggerChange.Text == "H/W Trigger")
             {
-                Camera.HardWareTriggerStart((double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value, chkEnbStrobe.Checked);
+                CameraManager.HardWareTriggerStart((double)exposureUpDown.Value, (double)brightnessUpDown.Value, (double)contrastUpDown.Value, chkEnbStrobe.Checked);
                 mAcqFifo.Complete += AcqFifo_Complete;
                 btnTriggerChange.Text = "S/W Trigger";
                 TriggerChangeEnable(false);
@@ -361,9 +343,9 @@ namespace VisionProTest
             }
             else
             {
-                Camera.HardWareTriggerStop();
+                CameraManager.HardWareTriggerStop();
                 VidFormatComboBox.Items.Clear();
-                Camera.SetFormat(mFrameGrabber, VidFormatComboBox, VidFormatComboBox_SelectedIndexChanged);
+                CameraManager.SetFormat(mFrameGrabber, VidFormatComboBox, VidFormatComboBox_SelectedIndexChanged);
                 btnTriggerChange.Text = "H/W Trigger";
                 TriggerChangeEnable(true);
                 VidFormatComboBox.SelectedIndex = videoFormatIndex;
@@ -373,6 +355,8 @@ namespace VisionProTest
 
         private void BtnSetupLoad_Click(object sender, EventArgs e)   // Setup 버튼 클릭 이벤트
         {
+            FormSetup _FormSetup = new FormSetup();
+
             ImageManager.TempImageSave(mDisplay[selectStep].Image);
             _FormSetup.Setup_Load();
             _FormSetup.Owner = this;
@@ -380,15 +364,13 @@ namespace VisionProTest
 
         private void BtnRun_Click(object sender, EventArgs e)
         {
-            string toolSelect = _FormSetup.SelectModel();
-
-            if (toolSelect == null || toolSelect == "")
+            if (string.IsNullOrEmpty(FormSetup.SelectModel()))
                 return;
 
             mDisplay[nextStep].StaticGraphics.Clear();
             mDisplay[nextStep].InteractiveGraphics.Clear();
 
-            _FormSetup.SelectToolRun(mDisplay[nextStep]);
+            FormSetup.SelectToolRun(mDisplay[nextStep]);
         }
 
         private void BtnExit_Click(object sender, EventArgs e)   // 종료 버튼 클릭 이벤트
